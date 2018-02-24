@@ -215,7 +215,7 @@ class SymantecDLPConnector(BaseConnector):
         self.save_progress("Querying incident IDs to test connectivity")
         ret_val, response = self._make_soap_call(action_result, 'incidentList', (config[DLP_JSON_REPORT_ID], '0001-01-01T00:00:00'))
 
-        if (phantom.is_fail(ret_val)):
+        if phantom.is_fail(ret_val):
             self.save_progress(action_result.get_message())
             self.set_status(phantom.APP_ERROR, "Test Connectivity Failed")
             return action_result.get_status()
@@ -299,7 +299,7 @@ class SymantecDLPConnector(BaseConnector):
         # lets move the data into the vault
         vault_attach_dict = {}
 
-        if (not file_name):
+        if not file_name:
             file_name = os.path.basename(local_file_path)
 
         self.debug_print("Vault file name: {0}".format(file_name))
@@ -313,41 +313,41 @@ class SymantecDLPConnector(BaseConnector):
             vault_ret = Vault.add_attachment(local_file_path, container_id, file_name, vault_attach_dict)
         except Exception as e:
             self.debug_print(phantom.APP_ERR_FILE_ADD_TO_VAULT.format(e))
-            return (phantom.APP_ERROR, phantom.APP_ERROR)
+            return phantom.APP_ERROR, phantom.APP_ERROR
 
         # self.debug_print("vault_ret_dict", vault_ret_dict)
 
-        if (not vault_ret.get('succeeded')):
+        if not vault_ret.get('succeeded'):
             self.debug_print("Failed to add file to Vault: {0}".format(json.dumps(vault_ret)))
-            return (phantom.APP_ERROR, phantom.APP_ERROR)
+            return phantom.APP_ERROR, phantom.APP_ERROR
 
         # add the vault id artifact to the container
         cef_artifact = {}
-        if (file_name):
+        if file_name:
             cef_artifact.update({'fileName': file_name})
-        if (phantom.APP_JSON_HASH in vault_ret):
+        if phantom.APP_JSON_HASH in vault_ret:
             cef_artifact.update({'vaultId': vault_ret[phantom.APP_JSON_HASH]})
 
-        if (not cef_artifact):
-            return (phantom.APP_SUCCESS, phantom.APP_ERROR)
+        if not cef_artifact:
+            return phantom.APP_SUCCESS, phantom.APP_ERROR
 
         artifact = {}
         artifact.update(pi.artifact_common)
         artifact['container_id'] = container_id
         artifact['name'] = 'Vault Artifact'
         artifact['cef'] = cef_artifact
-        if (contains):
+        if contains:
             artifact['cef_types'] = {'vaultId': contains}
         self._set_sdi(artifact_id, artifact)
 
         ret_val, status_string, artifact_id = self.save_artifact(artifact)
         self.debug_print("save_artifact returns, value: {0}, reason: {1}, id: {2}".format(ret_val, status_string, artifact_id))
 
-        return (phantom.APP_SUCCESS, ret_val)
+        return phantom.APP_SUCCESS, ret_val
 
     def _set_sdi(self, default_id, input_dict):
 
-        if ('source_data_identifier' in input_dict):
+        if 'source_data_identifier' in input_dict:
             del input_dict['source_data_identifier']
 
         input_dict['source_data_identifier'] = self._create_dict_hash(input_dict)
@@ -358,7 +358,7 @@ class SymantecDLPConnector(BaseConnector):
 
         input_dict_str = None
 
-        if (not input_dict):
+        if not input_dict:
             return None
 
         try:
@@ -433,7 +433,7 @@ class SymantecDLPConnector(BaseConnector):
                 self._set_sdi((j + vault_artifacts_added), artifact)
 
                 # if it is the last artifact of the last container
-                if ((j + 1) == len_artifacts):
+                if (j + 1) == len_artifacts:
                     # mark it such that active playbooks get executed
                     artifact['run_automation'] = True
 
@@ -452,12 +452,12 @@ class SymantecDLPConnector(BaseConnector):
             dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_POLL_NOW_DAYS]))
             time_string = dt_diff.strftime("%Y-%m-%dT%H:%M:%S.000")
             return time_string
-        elif (self._state.get('first_run', True)):
+        elif self._state.get('first_run', True):
             self._state['first_run'] = False
             dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_SCHEDULED_POLL_DAYS]))
             time_string = dt_diff.strftime("%Y-%m-%dT%H:%M:%S.000")
             return time_string
-        elif (last_time):
+        elif last_time:
             return last_time
 
         # treat it as the same days past as first run
@@ -546,9 +546,9 @@ class SymantecDLPConnector(BaseConnector):
         action = self.get_action_identifier()
         ret_val = phantom.APP_SUCCESS
 
-        if (action == self.ACTION_ID_TEST_CONNECTIVITY):
+        if action == self.ACTION_ID_TEST_CONNECTIVITY:
             ret_val = self._test_connectivity(param)
-        elif (action == self.ACTION_ID_ON_POLL):
+        elif action == self.ACTION_ID_ON_POLL:
             ret_val = self._on_poll(param)
 
         return ret_val

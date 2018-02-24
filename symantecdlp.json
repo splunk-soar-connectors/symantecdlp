@@ -1,7 +1,7 @@
 {
     "appid": "0a376a90-b798-42fd-af6a-b2b844265481",
     "name": "Symantec Data Leak Protection",
-    "description": "This app ingests data from a Symantec Data Leak Protection installation.",
+    "description": "This app ingests data from a Symantec Data Leak Protection installation",
     "publisher": "Phantom",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.pyc",
@@ -15,6 +15,14 @@
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
     "license": "Copyright (c) Phantom Cyber Corporation 2018",
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "suds",
+                "input_file": "wheels/suds-0.4-cp27-none-any.whl"
+            }
+        ]
+    },
     "configuration": {
         "url": {
             "description": "Device URL, e.g. https://mysymcdlp.contoso.com",
