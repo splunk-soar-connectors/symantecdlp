@@ -288,7 +288,7 @@ class SymantecDLPConnector(BaseConnector):
 
         return contains
 
-    def _handle_file(self, curr_file, vault_ids, container_id, artifact_id):
+    def _handle_file(self, curr_file, vault_ids, container_id, artifact_id, is_last):
 
         file_name = curr_file.get('file_name')
 
@@ -339,6 +339,8 @@ class SymantecDLPConnector(BaseConnector):
         if contains:
             artifact['cef_types'] = {'vaultId': contains}
         self._set_sdi(artifact_id, artifact)
+        if is_last:
+            artifact['run_automation'] = True
 
         ret_val, status_string, artifact_id = self.save_artifact(artifact)
         self.debug_print("save_artifact returns, value: {0}, reason: {1}, id: {2}".format(ret_val, status_string, artifact_id))
@@ -381,9 +383,28 @@ class SymantecDLPConnector(BaseConnector):
         for i, result in enumerate(results):
 
             container = result.get('container')
+            files = result.get('files', [])
 
             if not container:
+                self.save_progress("no container")
                 continue
+
+            artifacts = container.get('artifacts', [])
+            len_artifacts = len(artifacts)
+
+            for j, artifact in enumerate(artifacts):
+
+                if not artifact:
+                    continue
+
+                self._set_sdi(j, artifact)
+
+                # if it is the last artifact of the last container
+                if not files and (j + 1) == len_artifacts:
+                    # mark it such that active playbooks get executed
+                    artifact['run_automation'] = True
+
+            container['artifacts'] = artifacts
 
             self.send_progress("Saving Container # {0}".format(i + 1))
 
@@ -405,40 +426,13 @@ class SymantecDLPConnector(BaseConnector):
                 self.debug_print(message)
                 continue
 
-            files = result.get('files')
-
             vault_ids = list()
-
-            vault_artifacts_added = 0
+            len_files = len(files)
+            count = len_artifacts
 
             for curr_file in files:
-                ret_val, added_to_vault = self._handle_file(curr_file, vault_ids, container_id, vault_artifacts_added)
-
-                if added_to_vault:
-                    vault_artifacts_added += 1
-
-            artifacts = result.get('artifacts')
-            if not artifacts:
-                continue
-
-            len_artifacts = len(artifacts)
-
-            for j, artifact in enumerate(artifacts):
-
-                if not artifact:
-                    continue
-
-                # add the container id to the artifact
-                artifact['container_id'] = container_id
-                self._set_sdi((j + vault_artifacts_added), artifact)
-
-                # if it is the last artifact of the last container
-                if (j + 1) == len_artifacts:
-                    # mark it such that active playbooks get executed
-                    artifact['run_automation'] = True
-
-                ret_val, status_string, artifact_id = self.save_artifact(artifact)
-                self.debug_print("save_artifact returns, value: {0}, reason: {1}, id: {2}".format(ret_val, status_string, artifact_id))
+                count += 1
+                ret_val, added_to_vault = self._handle_file(curr_file, vault_ids, container_id, count, count == len_artifacts + len_files)
 
         return self.set_status(phantom.APP_SUCCESS)
 
