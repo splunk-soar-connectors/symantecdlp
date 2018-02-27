@@ -243,7 +243,7 @@ class SymantecDLPConnector(BaseConnector):
             return RetVal(ret_val)
 
         if not response:
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Got empty or None incident response"))
+            return RetVal(action_result.set_status(phantom.APP_ERROR, "Incident response returned was empty or None"))
 
         resp_dict = self._suds_to_dict(response)
 

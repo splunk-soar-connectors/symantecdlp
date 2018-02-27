@@ -190,20 +190,23 @@ def parse_network_incident(incident_type, incident, container, artifacts):
         if isinstance(v, basestring):
             cef_types = determine_contains(v)
 
-    if incident_type == 'NetworkEmailIncidentDetail':
-        return parse_network_email_incident(incident, container, artifact)
-    if incident_type == 'NetworkFTPIncidentDetail':
-        return parse_network_ftp_incident(incident, container, artifact)
-    if incident_type == 'NetworkHTTPIncidentDetail':
-        return parse_network_http_incident(incident, container, artifact)
-    if incident_type == 'NetworkIMIncidentDetail':
-        return parse_network_im_incident(incident, container, artifact)
-    if incident_type == 'NetworkNNTPIncidentDetail':
-        return parse_network_nntp_incident(incident, container, artifact)
-    if incident_type == 'NetworkRESTIncidentDetail':
-        return parse_network_rest_incident(incident, container, artifact)
-    if incident_type == 'NetworkUniversalIncidentDetail':
-        return parse_network_universal_incident(incident, container, artifact)
+    parser_dict = {
+            'NetworkEmailIncidentDetail': parse_network_email_incident,
+            'NetworkFTPIncidentDetail': parse_network_ftp_incident,
+            'NetworkHTTPIncidentDetail': parse_network_http_incident,
+            'NetworkIMIncidentDetail': parse_network_im_incident,
+            'NetworkNNTPIncidentDetail': parse_network_nntp_incident,
+            'NetworkRESTIncidentDetail': parse_network_rest_incident,
+            'NetworkUniversalIncidentDetail': parse_network_universal_incident
+        }
+
+    if incident_type not in parser_dict:
+        artifact['name'] = "Network Incident Info"
+        container['name'] = "Network Incident at {0}".format(incident['incidentCreationDate'])
+        return True
+
+    parser = parser_dict[incident_type]
+    parser(incident, container, artifact)
 
     return True
 
@@ -327,24 +330,25 @@ def parse_endpoint_incident(incident_type, incident, container, artifacts):
         if isinstance(v, basestring):
             cef_types = determine_contains(v)
 
-    if incident_type == 'EndpointClipboardIncidentDetail':
-        return parse_endpoint_clipboard_incident(incident, container, artifact)
-    if incident_type == 'EndpointEmailIncidentDetail':
-        return parse_endpoint_email_incident(incident, container, artifact)
-    if incident_type == 'EndpointFTPIncidentDetail':
-        return parse_endpoint_ftp_incident(incident, container, artifact)
-    if incident_type == 'EndpointHTTPIncidentDetail':
-        return parse_endpoint_http_incident(incident, container, artifact)
-    if incident_type == 'EndpointIMIncidentDetail':
-        return parse_endpoint_im_incident(incident, container, artifact)
-    if incident_type == 'EndpointLocalFileSystemIncidentDetail':
-        return parse_endpoint_local_file_system_incident(incident, container, artifact)
-    if incident_type == 'EndpointNNTPIncidentDetail':
-        return parse_endpoint_nntp_incident(incident, container, artifact)
-    if incident_type == 'EndpointPrintFaxIncidentDetail':
-        return parse_endpoint_print_fax_incident(incident, container, artifact)
-    if incident_type == 'EndpointRemovableStorageIncidentDetail':
-        return parse_endpoint_removable_storage_incident(incident, container, artifact)
+    parser_dict = {
+            'EndpointClipboardIncidentDetail': parse_endpoint_clipboard_incident,
+            'EndpointEmailIncidentDetail': parse_endpoint_email_incident,
+            'EndpointFTPIncidentDetail': parse_endpoint_ftp_incident,
+            'EndpointHTTPIncidentDetail': parse_endpoint_http_incident,
+            'EndpointIMIncidentDetail': parse_endpoint_im_incident,
+            'EndpointLocalFileSystemIncidentDetail': parse_endpoint_local_file_system_incident,
+            'EndpointNNTPIncidentDetail': parse_endpoint_nntp_incident,
+            'EndpointPrintFaxIncidentDetail': parse_endpoint_print_fax_incident,
+            'EndpointRemovableStorageIncidentDetail': parse_endpoint_removable_storage_incident
+        }
+
+    if incident_type not in parser_dict:
+        artifact['name'] = "Network Incident Info"
+        container['name'] = "Network Incident at {0}".format(incident['incidentCreationDate'])
+        return True
+
+    parser = parser_dict[incident_type]
+    parser(incident, container, artifact)
 
     return True
 
@@ -513,41 +517,36 @@ def parse_discover_incident(incident_type, incident, container, artifacts):
         if isinstance(v, basestring):
             cef_types = determine_contains(v)
 
-    if incident_type == 'DiscoverBoxCrawlerIncidentDetail':
-        return parse_discover_box_crawler_incident(incident, container, artifact)
-    if incident_type == 'DiscoverDocumentumScannerIncidentDetail':
-        return parse_discover_documentum_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverDropboxCrawlerIncidentDetail':
-        return parse_discover_dropbox_crawler_incident(incident, container, artifact)
-    if incident_type == 'DiscoverEndpointFileSystemIncidentDetail':
-        return parse_discover_endpoint_file_system_incident(incident, container, artifact)
+    parser_dict = {
+            'DiscoverBoxCrawlerIncidentDetail': parse_discover_box_crawler_incident,
+            'DiscoverDocumentumScannerIncidentDetail': parse_discover_documentum_scanner_incident,
+            'DiscoverDropboxCrawlerIncidentDetail': parse_discover_dropbox_crawler_incident,
+            'DiscoverEndpointFileSystemIncidentDetail': parse_discover_endpoint_file_system_incident,
+            'DiscoverExchangeCrawlerIncidentDetail': parse_discover_exchange_crawler_incident,
+            'DiscoverExchangeScannerIncidentDetail': parse_discover_exchange_scanner_incident,
+            'DiscoverFileSystemIncidentDetail': parse_discover_file_system_incident,
+            'DiscoverFileSystemScannerIncidentDetail': parse_discover_file_system_scanner_incident,
+            'DiscoverGenericScannerIncidentDetail': parse_discover_generic_scanner_incident,
+            'DiscoverLivelinkScannerIncidentDetail': parse_discover_livelink_scanner_incident,
+            'DiscoverLotusNotesIncidentDetail': parse_discover_lotus_notes_incident,
+            'DiscoverOneDriveCrawlerIncidentDetail': parse_discover_one_drive_crawler_incident,
+            'DiscoverSQLDatabaseIncidentDetail': parse_discover_sql_database_incident,
+            'DiscoverSharePointCrawlerIncidentDetail': parse_discover_share_point_crawler_incident,
+            'DiscoverSharepointScannerIncidentDetail': parse_discover_share_point_scanner_incident,
+            'DiscoverWebServerScannerIncidentDetail': parse_discover_web_server_scanner_incident,
+            'DiscoverWebServiceIncidentDetail': parse_discover_web_service_incident
+        }
+
     if incident_type == 'DiscoverExchangeCrawlerIncidentDetail':
         parse_originator_recipient(incident, artifacts)
-        return parse_discover_exchange_crawler_incident(incident, container, artifact)
-    if incident_type == 'DiscoverExchangeScannerIncidentDetail':
-        return parse_discover_exchange_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverFileSystemIncidentDetail':
-        return parse_discover_file_system_incident(incident, container, artifact)
-    if incident_type == 'DiscoverFileSystemScannerIncidentDetail':
-        return parse_discover_file_system_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverGenericScannerIncidentDetail':
-        return parse_discover_generic_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverLivelinkScannerIncidentDetail':
-        return parse_discover_livelink_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverLotusNotesIncidentDetail':
-        return parse_discover_lotus_notes_incident(incident, container, artifact)
-    if incident_type == 'DiscoverOneDriveCrawlerIncidentDetail':
-        return parse_discover_one_drive_crawler_incident(incident, container, artifact)
-    if incident_type == 'DiscoverSQLDatabaseIncidentDetail':
-        return parse_discover_sql_database_incident(incident, container, artifact)
-    if incident_type == 'DiscoverSharePointCrawlerIncidentDetail':
-        return parse_discover_share_point_crawler_incident(incident, container, artifact)
-    if incident_type == 'DiscoverSharepointScannerIncidentDetail':
-        return parse_discover_share_point_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverWebServerScannerIncidentDetail':
-        return parse_discover_web_server_scanner_incident(incident, container, artifact)
-    if incident_type == 'DiscoverWebServiceIncidentDetail':
-        return parse_discover_web_service_incident(incident, container, artifact)
+
+    if incident_type not in parser_dict:
+        artifact['name'] = "Discover Incident Info"
+        container['name'] = "Discover Incident at {0}".format(incident['incidentCreationDate'])
+        return True
+
+    parser = parser_dict[incident_type]
+    parser(incident, container, artifact)
 
     return True
 
