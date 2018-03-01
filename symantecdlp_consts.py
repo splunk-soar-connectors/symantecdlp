@@ -1,7 +1,7 @@
 # --
 # File: symantecdlp_consts.py
 #
-# Copyright (c) Phantom Cyber Corporation, 2017
+# Copyright (c) Phantom Cyber Corporation, 2018
 #
 # This unpublished material is proprietary to Phantom Cyber.
 # All rights reserved. The methods and
@@ -28,3 +28,4 @@ DLP_ERR_SERVER_CONNECTION = "Connection failed"
 
 DLP_DEFAULT_ARTIFACT_COUNT = 100
 DLP_DEFAULT_CONTAINER_COUNT = 100
+DLP_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S"
