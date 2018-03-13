@@ -1,7 +1,7 @@
 {
     "appid": "0a376a90-b798-42fd-af6a-b2b844265481",
-    "name": "Symantec Data Leak Protection",
-    "description": "This app ingests data from a Symantec Data Leak Protection installation",
+    "name": "Symantec Data Loss Prevention",
+    "description": "This app ingests data from a Symantec Data Loss Prevention installation",
     "publisher": "Phantom",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.pyc",
@@ -9,9 +9,9 @@
     "utctime_updated": "2018-03-13T16:22:36.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
-    "product_name": "Security DLP",
+    "product_name": "Symantec DLP",
     "product_version_regex": ".*",
-    "min_phantom_version": "3.0.251",
+    "min_phantom_version": "3.0.284",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
     "license": "Copyright (c) Phantom Cyber Corporation 2018",
@@ -98,15 +98,15 @@
             "parameters": {
                 "start_time": {
                     "data_type": "numeric",
-                    "description": "Parameter Ignored in this app"
+                    "description": "Parameter ignored in this app"
                 },
                 "end_time": {
                     "data_type": "numeric",
-                    "description": "Parameter Ignored in this app"
+                    "description": "Parameter ignored in this app"
                 },
                 "container_id": {
                     "data_type": "string",
-                    "description": "Parameter Ignored in this app"
+                    "description": "Parameter ignored in this app"
                 },
                 "container_count": {
                     "data_type": "numeric",
@@ -116,7 +116,7 @@
                 },
                 "artifact_count": {
                     "data_type": "numeric",
-                    "description": "Parameter Ignored in this app",
+                    "description": "Parameter ignored in this app",
                     "required": false,
                     "default": 1000
                 }
