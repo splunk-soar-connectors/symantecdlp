@@ -64,14 +64,14 @@
         },
         "poll_now_ingestion_span": {
             "default": "15",
-            "required": false,
+            "required": true,
             "data_type": "numeric",
             "description": "Poll last n days for 'Poll Now'",
             "order": 6
         },
         "first_scheduled_ingestion_span": {
             "default": "10",
-            "required": false,
+            "required": true,
             "data_type": "numeric",
             "description": "Poll last n days for first scheduled polling",
             "order": 7
