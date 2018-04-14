@@ -679,8 +679,8 @@ def parse_incidents(incidents, base_connector):
         container['name'] = container_name
         container.update(container_common)
 
-        if 'severity' in curr_incident:
-            container['severity'] = curr_incident.get('severity', 'medium')
+        if 'severity' in curr_incident.get('incident', []):
+            container['severity'] = curr_incident.get('incident', {}).get('severity', 'medium')
 
         cef = {}
         if 'policy' in curr_incident:

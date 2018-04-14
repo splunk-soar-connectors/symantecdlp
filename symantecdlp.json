@@ -63,18 +63,31 @@
             "order": 5
         },
         "poll_now_ingestion_span": {
-            "default": "15",
+            "default": 15,
             "required": true,
             "data_type": "numeric",
             "description": "Poll last n days for 'Poll Now'",
             "order": 6
         },
         "first_scheduled_ingestion_span": {
-            "default": "10",
+            "default": 10,
             "required": true,
             "data_type": "numeric",
             "description": "Poll last n days for first scheduled polling",
             "order": 7
+        },
+        "max_containers": {
+            "default": 10,
+            "required": true,
+            "data_type": "numeric",
+            "description": "Maximum number of containers to ingest during scheduled polling",
+            "order": 8
+        },
+        "timezone": {
+            "data_type": "timezone",
+            "required": true,
+            "description": "Device timezone",
+            "order": 9
         }
     },
     "actions": [
@@ -111,14 +124,12 @@
                 "container_count": {
                     "data_type": "numeric",
                     "description": "Maximum number of emails to ingest",
-                    "required": true,
+                    "required": false,
                     "default": 100
                 },
                 "artifact_count": {
                     "data_type": "numeric",
-                    "description": "Parameter ignored in this app",
-                    "required": false,
-                    "default": 1000
+                    "description": "Parameter ignored in this app"
                 }
             },
             "output": [],
