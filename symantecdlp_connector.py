@@ -33,6 +33,7 @@ import requests
 import parse_incidents as pi
 from datetime import datetime
 from datetime import timedelta
+from pytz import timezone, utc
 from suds.client import Client
 from urllib2 import HTTPSHandler
 from suds.sudsobject import asdict
@@ -444,20 +445,26 @@ class SymantecDLPConnector(BaseConnector):
 
         if self.is_poll_now():
             dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_POLL_NOW_DAYS]))
-            time_string = dt_diff.strftime("%Y-%m-%dT%H:%M:%S.000")
-            return time_string
         elif self._state.get('first_run', True):
             self._state['first_run'] = False
             dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_SCHEDULED_POLL_DAYS]))
-            time_string = dt_diff.strftime("%Y-%m-%dT%H:%M:%S.000")
-            return time_string
         elif last_time:
             return last_time
+        else:
+            dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_SCHEDULED_POLL_DAYS]))
 
-        # treat it as the same days past as first run
-        dt_diff = datetime.utcnow() - timedelta(days=int(config[DLP_JSON_SCHEDULED_POLL_DAYS]))
-        time_string = dt_diff.strftime("%Y-%m-%dT%H:%M:%S.000")
-        return time_string
+        # get the device timezone
+        device_tz_sting = config[DLP_JSON_TIMEZONE]
+        to_tz = timezone(device_tz_sting)
+
+        # convert datetime to device timezone
+        dt_diff = dt_diff.replace(tzinfo=utc)
+        to_dt = to_tz.normalize(dt_diff.astimezone(to_tz))
+
+        time_str = to_dt.strftime(DLP_TIME_FORMAT)
+
+        # DLP is weird and wants a colon in the timezone value
+        return time_str[:-2] + ':' + time_str[-2:]
 
     def _on_poll(self, param):
 
@@ -467,13 +474,13 @@ class SymantecDLPConnector(BaseConnector):
         if phantom.is_fail(ret_val):
             return ret_val
 
-        # Get the maximum number of emails that we can pull, same as container count
-        try:
-            max_containers = int(param[phantom.APP_JSON_CONTAINER_COUNT])
-        except:
-            return self.set_status(phantom.APP_ERROR, "Invalid Container count")
-
         config = self.get_config()
+
+        # Get the maximum number of incidents that we can pull, same as container count
+        if self.is_poll_now():
+            max_containers = int(param[phantom.APP_JSON_CONTAINER_COUNT])
+        else:
+            max_containers = int(config['max_containers'])
 
         time_string = self._get_time_string()
 
@@ -497,12 +504,9 @@ class SymantecDLPConnector(BaseConnector):
 
         self.save_progress("Got {0} incidents".format(incident_len))
 
-        if max_containers < incident_len:
-            self.save_progress("Will trim ingested incidents to {0}".format(max_containers))
-            incident_ids.sort(key=int)
-            incident_ids = incident_ids[-(max_containers):]
-
+        incident_count = 0
         queried_incident_details = []
+        last_inc_id = self._state.get(DLP_JSON_LAST_INCIDENT_ID, -1)
 
         for curr_incident_id in incident_ids:
 
@@ -513,10 +517,18 @@ class SymantecDLPConnector(BaseConnector):
 
             self._cleanse_key_names(incident_detail)
 
+            if not self.is_poll_now() and int(incident_detail['incident']['incidentId']) <= last_inc_id:
+                continue
+
+            incident_count += 1
             queried_incident_details.append(incident_detail)
 
-            if not self.is_poll_now():
-                self._state[DLP_JSON_LAST_DATE_TIME] = incident_detail['incidentCreationDate']
+            if incident_count == max_containers:
+                break
+
+        if not self.is_poll_now():
+            self._state[DLP_JSON_LAST_DATE_TIME] = incident_detail['incident']['incidentCreationDate']
+            self._state[DLP_JSON_LAST_INCIDENT_ID] = int(incident_detail['incident']['incidentId'])
 
         try:
             results = pi.parse_incidents(queried_incident_details, self)
@@ -530,7 +542,7 @@ class SymantecDLPConnector(BaseConnector):
 
         self._parse_results(action_result, param, results)
 
-        # black line to update the last status message
+        # blank line to update the last status message
         self.send_progress('')
 
         return action_result.set_status(phantom.APP_SUCCESS)
