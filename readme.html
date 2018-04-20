@@ -1,0 +1,19 @@
+<!-- 
+File: readme.html
+
+Copyright (c) Phantom Cyber Corporation, 2018
+
+This unpublished material is proprietary to Phantom Cyber.
+All rights reserved. The methods and
+techniques described herein are considered trade secrets
+and/or confidential. Reproduction or distribution, in whole
+or in part, is forbidden except by express written permission
+of Phantom Cyber.
+-->
+
+<p>
+<h3>Ingestion</h3>
+During the first scheduled poll, all incidents that fall in the <b>first_scheduled_ingestion_span</b> will be ingested.
+<br><br>
+During a <b>POLL NOW</b>, incidents will be ingested starting with the most recent. The number of incidents ingested will depend on the specified <b>max_containers</b> and <b>poll_now_ingestion_span</b>, whichever limit is hit first.
+</p>
