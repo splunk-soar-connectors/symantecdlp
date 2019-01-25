@@ -1,4 +1,4 @@
 [submodule "wheels"]
     path = wheels
-    url = ssh://git@prod-bb-1.phantom.local:7999/per/suds.git
+    url = git@cd.splunkdev.com:phantom-external/suds.git
     ignore = dirty
