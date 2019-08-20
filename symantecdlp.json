@@ -103,6 +103,178 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "update incident",
+            "description": "Update a DLP incident",
+            "verbose": "For custom attributes defined in the administration console of DLP, use the custom_fields parameter. The parameter must be a JSON string with the key being the name of the attribute and the value being the value of the attribute.",
+            "type": "generic",
+            "identifier": "update_incident",
+            "read_only": false,
+            "parameters": {
+                "incident_id": {
+                    "description": "ID of incident to update",
+                    "data_type": "string",
+                    "order": 0,
+                    "contains": [
+                        "dlp incident id"
+                    ],
+                    "primary": true,
+                    "required": true
+                },
+                "status": {
+                    "description": "New status of incident",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": false
+                },
+                "severity": {
+                    "description": "New severity of incident",
+                    "data_type": "string",
+                    "order": 2,
+                    "required": false,
+                    "value_list": [
+                        "HIGH",
+                        "MEDIUM",
+                        "LOW",
+                        "INFO"
+                    ]
+                },
+                "remediation_status": {
+                    "description": "New remediation status of incident",
+                    "data_type": "string",
+                    "order": 3,
+                    "required": false,
+                    "value_list": [
+                        "BLOCKED",
+                        "CONTENT_REMOVED",
+                        "CUSTOM_ACTION_ON_EMAIL",
+                        "EMAIL_APPROVED",
+                        "EMAIL_BLOCKED",
+                        "EMAIL_MESSAGE_EXPUNGED",
+                        "EMAIL_QUARANTINED",
+                        "ENDPOINT_BLOCK",
+                        "ENDPOINT_NOTIFY",
+                        "ENDPOINT_FILE_QUARANTINED",
+                        "ENDPOINT_FILE_QUARANTINE_FAILED",
+                        "ENDPOINT_NOTIFY_CANCEL_ALLOW",
+                        "ENDPOINT_NOTIFY_CANCEL_BLOCK",
+                        "ENDPOINT_NOTIFY_CANCEL_TIMEOUT_ALLOW",
+                        "ENDPOINT_NOTIFY_CANCEL_TIMEOUT_BLOCK",
+                        "FLEX_RESPONSE_ERROR",
+                        "FLEX_RESPONSE_EXECUTED",
+                        "FLEX_RESPONSE_REQUESTED",
+                        "MESSAGE_MODIFIED",
+                        "PASSED",
+                        "PLACE_HOLDER_DO_NOT_USE",
+                        "PROTECT_FILE_COPIED",
+                        "PROTECT_FILE_DELETED",
+                        "PROTECT_FILE_QUARANTINED",
+                        "PROTECT_REMEDIATION_ERROR",
+                        "REST_ENCRYTPED",
+                        "REST_PERFORMED_DRM",
+                        "REST_PERFORMED_BREAK_LINKS",
+                        "REST_PERFORMED_CUSTOM_ACTION"
+                    ]
+                },
+                "remediation_location": {
+                    "description": "Represents the remediation location of the incident",
+                    "data_type": "string",
+                    "order": 4,
+                    "required": false
+                },
+                "custom_fields": {
+                    "description": "JSON string representing custom fields to update (defined in administration console)",
+                    "data_type": "string",
+                    "order": 5,
+                    "required": false
+                }
+            },
+            "render": {
+                "type": "table"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.incident_id",
+                    "data_type": "string",
+                    "example_values": [
+                        "00049487"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "In Progress"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.severity",
+                    "data_type": "string",
+                    "example_values": [
+                        "MEDIUM"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.remediation_location",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.remediation_status",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.custom_fields",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.batchId",
+                    "data_type": "string",
+                    "example_values": [
+                        "304ee0ec-cd7c-4c92-ab28-8a561d9c4d7b"
+                    ],
+                    "column_name": "Batch ID",
+                    "column_order": 0
+                },
+                {
+                    "data_path": "action_result.data.*.statusCode",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ],
+                    "column_name": "Status Code",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully updated incident"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        },
+        {
             "action": "on poll",
             "description": "Action handler for the ingest functionality",
             "type": "ingest",

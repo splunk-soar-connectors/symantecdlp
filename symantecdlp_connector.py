@@ -31,6 +31,8 @@ import base64
 import hashlib
 import requests
 import parse_incidents as pi
+import uuid
+
 from datetime import datetime
 from datetime import timedelta
 from pytz import timezone, utc
@@ -76,6 +78,7 @@ MAGIC_FORMATS = [
 class SymantecDLPConnector(BaseConnector):
 
     ACTION_ID_TEST_CONNECTIVITY = "test_connectivity"
+    ACTION_ID_UPDATE_INCIDENT = "update_incident"
     ACTION_ID_ON_POLL = "on_poll"
 
     def __init__(self):
@@ -224,6 +227,81 @@ class SymantecDLPConnector(BaseConnector):
         self.save_progress("Test Connectivity Successful")
 
         return action_result.set_status(phantom.APP_SUCCESS, "Test Connectivity Successful")
+
+    def _handle_update_incident(self, param):
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        # create SUDS client
+        ret_val = self._create_client(action_result)
+        if phantom.is_fail(ret_val):
+            return ret_val
+
+        # required field, even though it is not used by DLP
+        batch_id = uuid.uuid4()
+        incident_id = param[DLP_JSON_INCIDENT_ID]
+        status = param.get(DLP_JSON_STATUS)
+        severity = param.get(DLP_JSON_SEVERITY)
+        note = param.get(DLP_JSON_NOTE)
+        now_date = str(datetime.now())
+        custom_fields = param.get(DLP_JSON_CUSTOM_FIELDS)
+        remediation_status = param.get(DLP_JSON_REMEDIATION_STATUS)
+        remediation_location = param.get(DLP_JSON_REMEDIATION_LOCATION)
+
+        update_request = {
+            'batchId': batch_id,
+            'incidentId': incident_id,
+            'incidentAttributes': {
+            }
+        }
+
+        if status:
+            update_request['incidentAttributes']['status'] = status
+
+        if severity:
+            update_request['incidentAttributes']['severity'] = severity
+
+        if note:
+            update_request['incidentAttributes']['note'] = {
+                'note': note,
+                'dateAndTime': now_date
+            }
+
+        if remediation_status:
+            update_request['incidentAttributes']['remediationStatus'] = remediation_status
+
+        if remediation_location:
+            update_request['incidentAttributes']['remediationLocation'] = remediation_location
+
+        if custom_fields:
+            # should be JSON string
+            # {'name': value}
+            try:
+                custom_fields = json.loads(custom_fields)
+            except ValueError as ve:
+                return action_result.set_status(phantom.APP_ERROR, "custom_fields must be a JSON string.\r\nError: {}".format(ve)) 
+            except Exception as e:
+                return action_result.set_status(phantom.APP_ERROR, "custom_fields must be a JSON string.\r\nError: {}".format(ve)) 
+
+            custom_fields = [
+                {'name': key, 'value': value} 
+                for key, value in custom_fields.iteritems()
+            ]
+
+            update_request['incidentAttributes']['customAttributes'] = custom_fields
+
+        try:
+            response = self._client.service.updateIncidents(update_request)
+        except Exception as e:
+            return action_result.set_status(phantom.APP_ERROR, 'SOAP call to DLP failed', e)
+
+        if not response:
+            return action_result.set_status(phantom.APP_ERROR, "Response was empty")
+
+        action_result.update_data(self._suds_to_dict(response))
+        
+        return action_result.set_status(phantom.APP_SUCCESS, "Successfully updated incident")
 
     def _get_incident_ids(self, action_result, report_id, date_string):
 
@@ -554,6 +632,8 @@ class SymantecDLPConnector(BaseConnector):
 
         if action == self.ACTION_ID_TEST_CONNECTIVITY:
             ret_val = self._test_connectivity(param)
+        elif action == self.ACTION_ID_UPDATE_INCIDENT:
+            ret_val = self._handle_update_incident(param)
         elif action == self.ACTION_ID_ON_POLL:
             ret_val = self._on_poll(param)
 
