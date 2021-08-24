@@ -5,8 +5,8 @@
     "publisher": "Splunk",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.py",
-    "app_version": "2.0.0",
-    "utctime_updated": "2018-12-20T02:41:58.000000Z",
+    "app_version": "2.0.1",
+    "utctime_updated": "2021-08-24T00:04:26.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
     "product_name": "Symantec DLP",
@@ -200,7 +200,9 @@
                     "data_path": "action_result.parameter.custom_fields",
                     "data_type": "string",
                     "example_values": [
-                        {"custom_attribute": "test_value"}
+                        {
+                            "custom_attribute": "test_value"
+                        }
                     ]
                 },
                 {
