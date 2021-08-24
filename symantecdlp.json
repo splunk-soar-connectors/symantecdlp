@@ -1,28 +1,24 @@
 {
     "appid": "0a376a90-b798-42fd-af6a-b2b844265481",
     "name": "Symantec Data Loss Prevention",
-    "description": "This app ingests data from a Symantec Data Loss Prevention installation",
-    "publisher": "Phantom",
+    "description": "This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation",
+    "publisher": "Splunk",
     "type": "endpoint",
-    "main_module": "symantecdlp_connector.pyc",
-    "app_version": "1.0.11",
+    "main_module": "symantecdlp_connector.py",
+    "app_version": "2.0.0",
     "utctime_updated": "2018-12-20T02:41:58.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
     "product_name": "Symantec DLP",
     "product_version_regex": ".*",
-    "min_phantom_version": "3.0.284",
+    "min_phantom_version": "4.9.39220",
+    "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) Phantom Cyber Corporation 2018",
-    "pip_dependencies": {
-        "wheel": [
-            {
-                "module": "suds",
-                "input_file": "wheels/suds-0.4-cp27-none-any.whl"
-            }
-        ]
-    },
+    "license": "Copyright (c) 2018-2021 Splunk Inc.",
+    "latest_tested_versions": [
+        "Symantec DLP version 15.8"
+    ],
     "configuration": {
         "url": {
             "description": "Device URL, e.g. https://mysymcdlp.contoso.com",
@@ -33,7 +29,6 @@
         "verify_server_cert": {
             "data_type": "boolean",
             "description": "Verify server certificate",
-            "required": true,
             "order": 1,
             "default": false
         },
@@ -52,35 +47,31 @@
         "report_id": {
             "description": "Report ID to ingest data from",
             "order": 4,
-            "data_type": "string",
+            "data_type": "numeric",
             "required": true
         },
         "extract_components": {
             "default": true,
-            "required": true,
             "data_type": "boolean",
             "description": "Extract additional components",
             "order": 5
         },
         "poll_now_ingestion_span": {
             "default": 15,
-            "required": true,
             "data_type": "numeric",
-            "description": "Poll last n days for 'Poll Now'",
+            "description": "Poll last n days for 'Poll Now' (Default: 15)",
             "order": 6
         },
         "first_scheduled_ingestion_span": {
             "default": 10,
-            "required": true,
             "data_type": "numeric",
-            "description": "Poll last n days for first scheduled polling",
+            "description": "Poll last n days for first scheduled polling (Default: 10)",
             "order": 7
         },
         "max_containers": {
             "default": 10,
-            "required": true,
             "data_type": "numeric",
-            "description": "Maximum number of containers to ingest during scheduled polling",
+            "description": "Maximum number of containers to ingest during scheduled polling (Default: 10)",
             "order": 8
         },
         "timezone": {
@@ -88,6 +79,11 @@
             "required": true,
             "description": "Device timezone",
             "order": 9
+        },
+        "custom_severity": {
+            "data_type": "string",
+            "description": "JSON dictionary represented as a serialized JSON string (More details in the documentation)",
+            "order": 10
         }
     },
     "actions": [
@@ -112,7 +108,7 @@
             "parameters": {
                 "incident_id": {
                     "description": "ID of incident to update",
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "order": 0,
                     "contains": [
                         "dlp incident id"
@@ -123,14 +119,12 @@
                 "status": {
                     "description": "New status of incident",
                     "data_type": "string",
-                    "order": 1,
-                    "required": false
+                    "order": 1
                 },
                 "severity": {
                     "description": "New severity of incident",
                     "data_type": "string",
                     "order": 2,
-                    "required": false,
                     "value_list": [
                         "HIGH",
                         "MEDIUM",
@@ -142,7 +136,6 @@
                     "description": "New remediation status of incident",
                     "data_type": "string",
                     "order": 3,
-                    "required": false,
                     "value_list": [
                         "BLOCKED",
                         "CONTENT_REMOVED",
@@ -169,7 +162,7 @@
                         "PROTECT_FILE_DELETED",
                         "PROTECT_FILE_QUARANTINED",
                         "PROTECT_REMEDIATION_ERROR",
-                        "REST_ENCRYTPED",
+                        "REST_ENCRYPTED",
                         "REST_PERFORMED_DRM",
                         "REST_PERFORMED_BREAK_LINKS",
                         "REST_PERFORMED_CUSTOM_ACTION"
@@ -178,14 +171,17 @@
                 "remediation_location": {
                     "description": "Represents the remediation location of the incident",
                     "data_type": "string",
-                    "order": 4,
-                    "required": false
+                    "order": 4
+                },
+                "note": {
+                    "description": "Represents the note of the incident",
+                    "data_type": "string",
+                    "order": 5
                 },
                 "custom_fields": {
                     "description": "JSON string representing custom fields to update (defined in administration console)",
                     "data_type": "string",
-                    "order": 5,
-                    "required": false
+                    "order": 6
                 }
             },
             "render": {
@@ -196,21 +192,46 @@
                     "data_path": "action_result.status",
                     "data_type": "string",
                     "example_values": [
-                        "success"
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.custom_fields",
+                    "data_type": "string",
+                    "example_values": [
+                        {"custom_attribute": "test_value"}
                     ]
                 },
                 {
                     "data_path": "action_result.parameter.incident_id",
-                    "data_type": "string",
+                    "data_type": "numeric",
                     "example_values": [
-                        "00049487"
+                        49487
+                    ],
+                    "contains": [
+                        "dlp incident id"
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.status",
+                    "data_path": "action_result.parameter.note",
                     "data_type": "string",
                     "example_values": [
-                        "In Progress"
+                        "This is test note"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.remediation_location",
+                    "data_type": "string",
+                    "example_values": [
+                        "test location"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.remediation_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "BLOCKED"
                     ]
                 },
                 {
@@ -221,16 +242,11 @@
                     ]
                 },
                 {
-                    "data_path": "action_result.parameter.remediation_location",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.parameter.remediation_status",
-                    "data_type": "string"
-                },
-                {
-                    "data_path": "action_result.parameter.custom_fields",
-                    "data_type": "string"
+                    "data_path": "action_result.parameter.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "In Progress"
+                    ]
                 },
                 {
                     "data_path": "action_result.data.*.batchId",
@@ -249,6 +265,10 @@
                     ],
                     "column_name": "Status Code",
                     "column_order": 1
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
                 },
                 {
                     "data_path": "action_result.message",
@@ -296,7 +316,6 @@
                 "container_count": {
                     "data_type": "numeric",
                     "description": "Maximum number of emails to ingest",
-                    "required": false,
                     "default": 100
                 },
                 "artifact_count": {

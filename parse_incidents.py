@@ -1,21 +1,13 @@
-# --
 # File: parse_incidents.py
+# Copyright (c) 2018-2021 Splunk Inc.
 #
-# Copyright (c) Phantom Cyber Corporation, 2018
-#
-# This unpublished material is proprietary to Phantom Cyber.
-# All rights reserved. The methods and
-# techniques described herein are considered trade secrets
-# and/or confidential. Reproduction or distribution, in whole
-# or in part, is forbidden except by express written permission
-# of Phantom Cyber Corporation.
-#
-# --
+# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
+# without a valid written license from Splunk Inc. is PROHIBITED.
 
 
 import os
-import base64
 import tempfile
+from symantecdlp_consts import *
 from phantom.app import CONTAINS_VALIDATORS
 
 container_common = {
@@ -32,7 +24,7 @@ artifact_common = {
 
 def determine_contains(value):
     contains = []
-    for c, f in CONTAINS_VALIDATORS.items():
+    for c, f in list(CONTAINS_VALIDATORS.items()):
         if f(value):
             contains.append(c)
     return contains
@@ -133,7 +125,7 @@ def parse_network_http_incident(incident, container, artifact):
 def parse_network_im_incident(incident, container, artifact):
 
     artifact['name'] = "Instant Message Info"
-    container['name'] = "Instanct Message at {0}".format(incident['incidentCreationDate'])
+    container['name'] = "Instant Message at {0}".format(incident['incidentCreationDate'])
 
     return True
 
@@ -183,11 +175,11 @@ def parse_network_incident(incident_type, incident, container, artifacts):
     artifact['cef'] = cef
     artifact['cef_types'] = cef_types
 
-    for k, v in incident.iteritems():
+    for k, v in list(incident.items()):
         if k in ['policy', 'components', 'originator', 'recipient']:
             continue
         cef[k] = v
-        if isinstance(v, basestring):
+        if isinstance(v, (str, bytes)):
             cef_types = determine_contains(v)
 
     parser_dict = {
@@ -259,7 +251,7 @@ def parse_endpoint_http_incident(incident, container, artifact):
 def parse_endpoint_im_incident(incident, container, artifact):
 
     artifact['name'] = "Instant Message Info"
-    container['name'] = "Instanct Message at {0}".format(incident['incidentCreationDate'])
+    container['name'] = "Instant Message at {0}".format(incident['incidentCreationDate'])
 
     return True
 
@@ -317,17 +309,17 @@ def parse_endpoint_incident(incident_type, incident, container, artifacts):
     artifacts.append(artifact)
     artifact.update(artifact_common)
     cef = {}
-    cef_types = {'userName': 'user name'}
+    cef_types = {'userName': ['user name']}
     artifact['cef'] = cef
     artifact['cef_types'] = cef_types
 
-    for k, v in incident.iteritems():
+    for k, v in list(incident.items()):
         if k in ['policy', 'components', 'originator', 'recipient']:
             continue
         if k.startswith('machine'):
             cef[k.replace('machine', 'device')] = v
         cef[k] = v
-        if isinstance(v, basestring):
+        if isinstance(v, (str, bytes)):
             cef_types = determine_contains(v)
 
     parser_dict = {
@@ -504,17 +496,17 @@ def parse_discover_incident(incident_type, incident, container, artifacts):
     artifacts.append(artifact)
     artifact.update(artifact_common)
     cef = {}
-    cef_types = {'userName': 'user name'}
+    cef_types = {'userName': ['user name']}
     artifact['cef'] = cef
     artifact['cef_types'] = cef_types
 
-    for k, v in incident.iteritems():
+    for k, v in list(incident.items()):
         if k in ['policy', 'components', 'originator', 'recipient']:
             continue
         if k.startswith('machine'):
             cef[k.replace('machine', 'device')] = v
         cef[k] = v
-        if isinstance(v, basestring):
+        if isinstance(v, (str, bytes)):
             cef_types = determine_contains(v)
 
     parser_dict = {
@@ -566,13 +558,13 @@ def parse_mobile_incident(incident_type, incident, container, artifacts):
     artifact['cef'] = cef
     artifact['cef_types'] = cef_types
 
-    for k, v in incident.iteritems():
+    for k, v in list(incident.items()):
         if k in ['policy', 'components', 'originator', 'recipient']:
             continue
         if k.startswith('machine'):
             cef[k.replace('machine', 'device')] = v
         cef[k] = v
-        if isinstance(v, basestring):
+        if isinstance(v, (str, bytes)):
             cef_types = determine_contains(v)
 
     if incident_type == 'MobileFTPIncidentDetail':
@@ -611,17 +603,17 @@ def parse_rest_incident(incident_type, incident, container, artifacts):
     artifacts.append(artifact)
     artifact.update(artifact_common)
     cef = {}
-    cef_types = {'userName': 'user name'}
+    cef_types = {'userName': ['user name']}
     artifact['cef'] = cef
     artifact['cef_types'] = cef_types
 
-    for k, v in incident.iteritems():
+    for k, v in list(incident.items()):
         if k in ['policy', 'components', 'originator', 'recipient']:
             continue
         if k.startswith('machine'):
             cef[k.replace('machine', 'device')] = v
         cef[k] = v
-        if isinstance(v, basestring):
+        if isinstance(v, (str, bytes)):
             cef_types = determine_contains(v)
 
     if incident_type == 'RestDARIncidentDetail':
@@ -653,7 +645,7 @@ def parse_incident(incident_type, incident, container, artifacts):
 
 def parse_incidents(incidents, base_connector):
 
-    if (type(incidents) != list):
+    if not isinstance(incidents, list):
         raise "incidents parameter is not a list"
 
     results = []
@@ -680,7 +672,12 @@ def parse_incidents(incidents, base_connector):
         container.update(container_common)
 
         if 'severity' in curr_incident.get('incident', []):
-            container['severity'] = curr_incident.get('incident', {}).get('severity', 'medium')
+            container['severity'] = curr_incident.get('incident', {}).get('severity', 'medium').lower()
+            if container['severity'] in base_connector._severity.keys():
+                container['severity'] = base_connector._severity[container['severity']]
+            else:
+                base_connector.debug_print(DLP_UNKNOWN_SEVERITY.format(key=container['severity']))
+                container['severity'] = 'medium'
 
         cef = {}
         if 'policy' in curr_incident:
@@ -700,35 +697,29 @@ def parse_incidents(incidents, base_connector):
         # work on the files if present
         components = curr_incident.get('components', [])
 
-        if type(components) != list:
+        if not isinstance(components, list):
             components = [components]
 
         for component in components:
 
             content = component.get('content')
-            if (not content):
+            if not content:
                 continue
 
             file_desc, file_path = tempfile.mkstemp(suffix='.comp', prefix='app_dlp', dir='/vault/tmp/')
 
             file_name = component.get('name')
-            if (not file_name):
+            if not file_name:
                 file_name = os.path.split(file_path)[1]
 
             try:
-                file_contents = base64.b64decode(content)
-            except Exception as e:
-                base_connector.debug_print("Unable to decode file content", e)
-                continue
-
-            try:
-                with open(file_path, 'wb') as file_handle:
-                    file_handle.write(file_contents)
+                with open(file_path, 'w') as file_handle:
+                    file_handle.write(content)
             except Exception as e:
                 base_connector.debug_print("Unable to save file content", e)
                 continue
 
-            os.chmod(file_path, 0660)
+            os.chmod(file_path, 0o660)
 
             file_info = {'file_path': file_path, 'file_name': file_name}
 
