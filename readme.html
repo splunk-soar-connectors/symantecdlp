@@ -1,19 +1,48 @@
-<!-- 
-File: readme.html
+<!-- File: readme.html
+  Copyright (c) 2018-2021 Splunk Inc.
 
-Copyright (c) Phantom Cyber Corporation, 2018
-
-This unpublished material is proprietary to Phantom Cyber.
-All rights reserved. The methods and
-techniques described herein are considered trade secrets
-and/or confidential. Reproduction or distribution, in whole
-or in part, is forbidden except by express written permission
-of Phantom Cyber.
+  SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
+  without a valid written license from Splunk Inc. is PROHIBITED.
 -->
-
-<p>
+<h2>On Poll</h2>
 <h3>Ingestion</h3>
-During the first scheduled poll, all incidents that fall in the <b>first_scheduled_ingestion_span</b> will be ingested.
-<br><br>
-During a <b>POLL NOW</b>, incidents will be ingested starting with the most recent. The number of incidents ingested will depend on the specified <b>max_containers</b> and <b>poll_now_ingestion_span</b>, whichever limit is hit first.
-</p>
+
+<h4> Schedule | Interval Polling </h4>
+<ul>
+  <li>During scheduled | interval polling, the app will start from the number of days specified in <b>first_scheduled_ingestion_span</b> and will ingest up to the number of incidents specified in the <b>max_containers</b> (Default value 10) in configuration parameter per cycle. Then it remembers the last ingested 'incident_id' and stores it in the state file against the key 'last_incident_ingested'. For the next scheduled | interval cycles, ingestion will start from the last_incident_ingested in the state file and will ingest up to the number of incidents specified in the <b>max_containers</b>.</li>
+  <li>The number of incidents ingested will depend on the specified <b>max_containers</b> and <b>poll_now_ingestion_span</b>, whichever limit is hit first.</li>
+</ul>
+<h4> Manual Polling </h4>
+<ul>
+  <li>
+    During a <b>POLL NOW</b>, incidents will be ingested starting with the oldest first. The number of incidents ingested will depend on the specified <b>max_containers</b> and <b>poll_now_ingestion_span</b>, whichever limit is hit first.
+  </li>
+</ul>
+<b>Custom Severity Config Parameter</b>
+<ul>
+<li>
+  It is an optional parameter. Here the user needs to provide a JSON string in the following format
+    <br>{'symantecdlp_severity': 'phantom_severity'}<br>
+  This parameter can be used to map the Symantec DLP incident severity to any of the custom phantom severity.
+</li>
+<li>
+  To configure a custom severity in the Phantom, go to Administrator → Event Settings → Severity. Click on 'add item' and give an appropriate name for the severity and click on 'Done' button.
+</li>
+<li>
+  By default, the severity is mapped in the following way:
+  <ul>
+    <li>
+      For the incident having 'high' severity, the container's severity will be 'high'.
+    </li>
+    <li>
+      For the incident having 'medium' severity, the container's severity will be 'medium'.
+    </li>
+    <li>
+      For the incident having 'low' severity, the container's severity will be 'low'.
+    </li>
+    <li>
+      For the incident having severity other than 'high', 'low' or 'medium' the container's severity will be 'medium'.
+    </li>
+  </ul>
+</li>
+</ul>
