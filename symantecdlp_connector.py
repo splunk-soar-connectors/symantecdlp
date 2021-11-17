@@ -499,7 +499,7 @@ class SymantecDLPConnector(BaseConnector):
         if isinstance(input_dict_str, str):
             input_dict_str = input_dict_str.encode('utf-8')
 
-        return hashlib.md5(input_dict_str).hexdigest()
+        return hashlib.sha256(input_dict_str).hexdigest()
 
     def _parse_results(self, action_result, param, results):
 
