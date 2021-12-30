@@ -80,7 +80,7 @@ class SymantecDLPConnector(BaseConnector):
 
     ACTION_ID_TEST_CONNECTIVITY = "test_connectivity"
     ACTION_ID_UPDATE_INCIDENT = "update_incident"
-    ACTION_ID_LIST_INCIDENT = "list_incident"
+    ACTION_ID_LIST_INCIDENTS = "list_incidents"
     ACTION_ID_GET_INCIDENT = "get_incident"
     ACTION_ID_ON_POLL = "on_poll"
 
@@ -354,7 +354,7 @@ class SymantecDLPConnector(BaseConnector):
         action_result.update_data(dict_response)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully updated incident")
 
-    def _handle_list_incident(self, param):
+    def _handle_list_incidents(self, param):
         self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
 
         action_result = self.add_action_result(ActionResult(dict(param)))
@@ -863,8 +863,8 @@ class SymantecDLPConnector(BaseConnector):
             ret_val = self._test_connectivity(param)
         elif action == self.ACTION_ID_UPDATE_INCIDENT:
             ret_val = self._handle_update_incident(param)
-        elif action == self.ACTION_ID_LIST_INCIDENT:
-            ret_val = self._handle_list_incident(param)
+        elif action == self.ACTION_ID_LIST_INCIDENTS:
+            ret_val = self._handle_list_incidents(param)
         elif action == self.ACTION_ID_GET_INCIDENT:
             ret_val = self._handle_get_incident(param)
         elif action == self.ACTION_ID_ON_POLL:

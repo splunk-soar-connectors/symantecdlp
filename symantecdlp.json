@@ -298,11 +298,11 @@
             "versions": "EQ(*)"
         },
         {
-            "action": "list incident",
-            "description": "List DLP incident",
-            "verbose": "<b>creation_time</b> parameter is used to fetch the incidents that were created after the creation time.<br>The timestamp should be entered in <b>YYYY-MM-DD</b> or a valid &quotISO 8601 timestamp&quot format.<br>Some examples of valid time formats are:<ul><li>2018-09-24</li><li>2018-09-23T14:40:44Z</li><li>2018-09-23T14:40:44+05:30</li><li>2020-08-30T01:45:36.123Z</li><li>2021-12-13T21:20:37.593194+05:30</li></ul>",
+            "action": "list incidents",
+            "description": "List DLP incidents",
+            "verbose": "<b>creation_time</b> parameter is used to fetch the incidents that were created after the creation time.<br>The timestamp should be entered in <b>YYYY-MM-DD</b> or a valid &quotISO 8601 timestamp&quot format.<br>Some examples of valid time formats are:<ul><li>2018-09-24</li><li>2018-09-23T14:40:44Z</li><li>2018-09-23T14:40:44+05:30</li><li>2020-08-30T01:45:36.123Z</li><li>2021-12-13T21:20:37.593194+05:30</li></ul><br><b>report_id</b> specifies the ID of the saved report to execute on the Enforce Server from which we want to fetch incident.",
             "type": "investigate",
-            "identifier": "list_incident",
+            "identifier": "list_incidents",
             "read_only": true,
             "parameters": {
                 "report_id": {
