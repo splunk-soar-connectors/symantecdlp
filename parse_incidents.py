@@ -14,8 +14,10 @@
 # and limitations under the License.
 import os
 import tempfile
-from symantecdlp_consts import *
+
 from phantom.app import CONTAINS_VALIDATORS
+
+from symantecdlp_consts import *
 
 container_common = {
     "description": "Container added by Phantom",
