@@ -1,5 +1,5 @@
 [comment]: # " File: readme.md"
-[comment]: # "  Copyright (c) 2018-2021 Splunk Inc."
+[comment]: # "  Copyright (c) 2018-2022 Splunk Inc."
 [comment]: # ""
 [comment]: # "Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "you may not use this file except in compliance with the License."
@@ -37,8 +37,8 @@
 **Custom Severity Config Parameter**
 
 -   It is an optional parameter. Here the user needs to provide a JSON string in the following
-    format  
-    {'symantecdlp_severity': 'phantom_severity'}  
+    format
+    {'symantecdlp_severity': 'phantom_severity'}
     This parameter can be used to map the Symantec DLP incident severity to any of the custom
     phantom severity.
 -   To configure a custom severity in the Phantom, go to Administrator → Event Settings → Severity.
