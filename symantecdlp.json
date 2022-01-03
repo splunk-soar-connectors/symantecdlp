@@ -389,7 +389,7 @@
         {
             "action": "get incident",
             "description": "Get DLP incident",
-            "verbose": "User has to provide value for either only one from <b>incident_id</b> or <b>incident_long_id</b> to get the incident details. It is recommended to use <b>incident_long_id</b> parameter to fetch incident details.",
+            "verbose": "User needs to provide value for either <b>incident_id</b> or <b>incident_long_id</b> to get the incident details. It is recommended to use <b>incident_long_id</b> parameter to fetch incident details.",
             "type": "investigate",
             "identifier": "get_incident",
             "read_only": true,

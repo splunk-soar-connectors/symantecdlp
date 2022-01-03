@@ -454,7 +454,7 @@ class SymantecDLPConnector(BaseConnector):
             action_result, incident_id, incident_long_id, config[DLP_JSON_EXTRACT_COMPONENTS], include_violations, include_history
         )
 
-        if (phantom.is_fail(ret_val)):
+        if phantom.is_fail(ret_val):
             return action_result.set_status(
                 phantom.APP_ERROR,
                 'Unable to fatch the incident. Please check the value provided to fatch the incident.'
