@@ -1,6 +1,6 @@
 # File: symantecdlp_connector.py
 #
-# Copyright (c) 2018-2021 Splunk Inc.
+# Copyright (c) 2018-2022 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -15,31 +15,28 @@
 #
 #
 # Phantom imports
-import phantom.app as phantom
-
-from phantom.base_connector import BaseConnector
-from phantom.action_result import ActionResult
-import phantom.rules as phantom_rules
-
-# THIS Connector imports
-from symantecdlp_consts import *
-
+import hashlib
+import json
 import os
 import re
-import json
-import magic
-import hashlib
-import requests
-import parse_incidents as pi
 import uuid
+from datetime import datetime, timedelta
 
-from datetime import datetime
-from datetime import timedelta
+import magic
+import phantom.app as phantom
+import phantom.rules as phantom_rules
+import requests
+from bs4 import UnicodeDammit
+from phantom.action_result import ActionResult
+from phantom.base_connector import BaseConnector
 from pytz import timezone, utc
 from requests.auth import AuthBase, HTTPBasicAuth
 from zeep import Client, Settings, helpers
 from zeep.transports import Transport
-from bs4 import UnicodeDammit
+
+import parse_incidents as pi
+# THIS Connector imports
+from symantecdlp_consts import *
 
 
 class RetVal(tuple):
@@ -83,6 +80,8 @@ class SymantecDLPConnector(BaseConnector):
 
     ACTION_ID_TEST_CONNECTIVITY = "test_connectivity"
     ACTION_ID_UPDATE_INCIDENT = "update_incident"
+    ACTION_ID_LIST_INCIDENTS = "list_incidents"
+    ACTION_ID_GET_INCIDENT = "get_incident"
     ACTION_ID_ON_POLL = "on_poll"
 
     def __init__(self):
@@ -161,7 +160,10 @@ class SymantecDLPConnector(BaseConnector):
             return phantom.APP_SUCCESS
 
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, 'Could not connect to the DLP API endpoint : {}' .format(self._get_error_message_from_exception(e)))
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Could not connect to the DLP API endpoint : {}' .format(self._get_error_message_from_exception(e))
+            )
 
     def _validate_integers(self, action_result, parameter, key, allow_zero=False):
         """ This method is to check if the provided input parameter value
@@ -316,7 +318,10 @@ class SymantecDLPConnector(BaseConnector):
             try:
                 custom_fields = json.loads(custom_fields)
             except Exception as e:
-                return action_result.set_status(phantom.APP_ERROR, "custom_fields must be a JSON string.\r\nError: {}".format(self._get_error_message_from_exception(e)))
+                return action_result.set_status(
+                    phantom.APP_ERROR,
+                    "custom_fields must be a JSON string.\r\nError: {}".format(self._get_error_message_from_exception(e))
+                )
 
             custom_fields = [
                 {'name': key, 'value': value} for key, value in list(custom_fields.items())
@@ -325,7 +330,10 @@ class SymantecDLPConnector(BaseConnector):
             update_request['incidentAttributes']['customAttribute'] = custom_fields
 
         if len(update_request['incidentAttributes']) == 0:
-            return action_result.set_status(phantom.APP_ERROR, 'Unable to update the incident. Please provide value in at least one parameter to update the incident.')
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Unable to update the incident. Please provide value in at least one parameter to update the incident.'
+            )
 
         try:
             response = self._client.service.updateIncidents(update_request)
@@ -338,10 +346,125 @@ class SymantecDLPConnector(BaseConnector):
         dict_response = self._zeep_to_dict(response)
 
         if dict_response[0]['statusCode'] != 'SUCCESS':
-            return action_result.set_status(phantom.APP_ERROR, 'Unable to update the incident. Please check the value provided to update the incident.')
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Unable to update the incident. Please check the value provided to update the incident.'
+            )
 
         action_result.update_data(dict_response)
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully updated incident")
+
+    def _handle_list_incidents(self, param):
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        # create zeep client
+        ret_val = self._create_client(action_result)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        report_id = self._validate_integers(action_result, param[DLP_JSON_REPORT_ID], DLP_JSON_REPORT_ID)
+
+        if report_id is None:
+            return action_result.get_status()
+
+        creation_time_after = param[DLP_JSON_CREATION_TIME]
+
+        date_status = self._validate_date(creation_time_after)
+        if not date_status:
+            return action_result.set_status(phantom.APP_ERROR, DLP_TIMESTAMP_VALIDATION_FAILED_MSG)
+
+        try:
+            response = self._client.service.incidentList(report_id, creation_time_after)
+        except Exception as e:
+            message = 'SOAP call to DLP failed. {}'.format(self._get_error_message_from_exception(e))
+            return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Occurred: {}".format(message)))
+
+        resp_dict = self._zeep_to_dict(response)
+        incident_ids = resp_dict.get('incidentLongId')
+
+        for incident_id in incident_ids:
+            data = action_result.add_data({})
+            data[DLP_JSON_INCIDENT_ID] = incident_id
+
+        summary = action_result.update_summary({})
+        summary[DLP_JSON_TOTAL_INCIDENTS] = action_result.get_data_size()
+
+        return action_result.set_status(phantom.APP_SUCCESS)
+
+    def _validate_date(self, date_timestamp):
+        """ This function is used to validate date timestamp as per YYYY-MM-DD format or valid ISO 8601 format.
+
+        :param date_timestamp: Value of the date timestamp
+        :return: status(phantom.APP_SUCCESS/phantom.APP_ERROR)
+        """
+
+        regex = r'^(-?(?:[1-9][0-9]*)?[0-9]{4})-(1[0-2]|0[1-9])-(3[01]|0[1-9]|[12][0-9])T(2[0-3]|[01][0-9]):' \
+                r'([0-5][0-9]):([0-5][0-9])(\.[0-9]+)?(Z|[+-](?:2[0-3]|[01][0-9]):[0-5][0-9])?$'
+
+        match_iso8601 = re.compile(regex).match
+        try:
+            if match_iso8601(date_timestamp) is not None:
+                return phantom.APP_SUCCESS
+            elif datetime.strptime(date_timestamp, '%Y-%m-%d'):
+                return phantom.APP_SUCCESS
+        except Exception:
+            return phantom.APP_ERROR
+
+        return phantom.APP_ERROR
+
+    def _handle_get_incident(self, param):
+
+        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+
+        action_result = self.add_action_result(ActionResult(dict(param)))
+
+        # create zeep client
+        ret_val = self._create_client(action_result)
+        if phantom.is_fail(ret_val):
+            return action_result.get_status()
+
+        config = self.get_config()
+        if param.get(DLP_JSON_INCIDENT_LONG_ID) is None and param.get(DLP_JSON_INCIDENT_ID) is None:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Please provide a value for at least one of the parameters incident_long_id or incident_id.'
+            )
+
+        incident_long_id = self._validate_integers(action_result, param.get(DLP_JSON_INCIDENT_LONG_ID), DLP_JSON_INCIDENT_LONG_ID)
+
+        if param.get(DLP_JSON_INCIDENT_LONG_ID) is not None and incident_long_id is None:
+            return action_result.get_status()
+
+        incident_id = self._validate_integers(action_result, param.get(DLP_JSON_INCIDENT_ID), DLP_JSON_INCIDENT_ID)
+
+        if param.get(DLP_JSON_INCIDENT_ID) is not None and incident_id is None:
+            return action_result.get_status()
+
+        if incident_long_id is not None and incident_id is not None:
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Please specify only one of the following parameters: incident_long_id or incident_id.'
+            )
+
+        include_violations = param.get(DLP_JSON_INCLUDE_VIOLATIONS)
+        include_history = param.get(DLP_JSON_INCLUDE_HISTORY)
+        ret_val, incident_detail = self._get_incident_details(
+            action_result, incident_id, incident_long_id, config[DLP_JSON_EXTRACT_COMPONENTS], include_violations, include_history
+        )
+
+        if phantom.is_fail(ret_val):
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                'Unable to fatch the incident. Please check the value provided to fatch the incident.'
+            )
+        else:
+            message = "The incident has been retrieved successfully"
+
+        action_result.add_data(incident_detail)
+
+        return action_result.set_status(phantom.APP_SUCCESS, message)
 
     def _get_incident_ids(self, action_result, report_id, date_string):
 
@@ -373,10 +496,17 @@ class SymantecDLPConnector(BaseConnector):
         response = self._sanitize_dict(response)
         return response
 
-    def _get_incident_details(self, action_result, incident_id, extract_files):
+    def _get_incident_details(self, action_result, incident_id, incident_long_id, extract_files, includeViolations, includeHistory):
 
+        binary_incident_id = incident_id
+        kwargs = dict()
+        if incident_long_id is not None:
+            kwargs['incidentLongId'] = incident_long_id
+            binary_incident_id = incident_long_id
+        else:
+            kwargs['incidentId'] = incident_id
         try:
-            response = self._client.service.incidentDetail(incidentId=incident_id, includeViolations=True)
+            response = self._client.service.incidentDetail(includeViolations=includeViolations, includeHistory=includeHistory, **kwargs)
         except Exception as e:
             message = 'SOAP call to DLP failed. {}'.format(self._get_error_message_from_exception(e))
             return RetVal(action_result.set_status(phantom.APP_ERROR, message))
@@ -389,7 +519,10 @@ class SymantecDLPConnector(BaseConnector):
         try:
             incident_details = resp_dict[0]
         except Exception as e:
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Could not get incident details: {0}".format(self._get_error_message_from_exception(e))))
+            return RetVal(action_result.set_status(
+                phantom.APP_ERROR,
+                "Could not get incident details: {0}".format(self._get_error_message_from_exception(e)))
+            )
 
         if not incident_details:
             return RetVal(action_result.set_status(phantom.APP_ERROR, "Incident details returned were empty or None"))
@@ -401,7 +534,7 @@ class SymantecDLPConnector(BaseConnector):
             return RetVal(phantom.APP_SUCCESS, incident_details)
 
         try:
-            response = self._client.service.incidentBinaries(incident_id, False, True)
+            response = self._client.service.incidentBinaries(binary_incident_id, False, True)
         except Exception as e:
             message = 'SOAP call to DLP failed. {}'.format(self._get_error_message_from_exception(e))
             return RetVal(action_result.set_status(phantom.APP_ERROR, message))
@@ -448,7 +581,9 @@ class SymantecDLPConnector(BaseConnector):
         vault_attach_dict[phantom.APP_JSON_APP_RUN_ID] = self.get_app_run_id()
 
         try:
-            success, message, vault_id = phantom_rules.vault_add(file_location=local_file_path, container=container_id, file_name=file_name, metadata=vault_attach_dict)
+            success, message, vault_id = phantom_rules.vault_add(
+                file_location=local_file_path, container=container_id, file_name=file_name, metadata=vault_attach_dict
+            )
         except Exception as e:
             self.debug_print(phantom.APP_ERR_FILE_ADD_TO_VAULT.format(self._get_error_message_from_exception(e)))
             return phantom.APP_ERROR, phantom.APP_ERROR
@@ -583,7 +718,9 @@ class SymantecDLPConnector(BaseConnector):
             container_severity = container.get('severity', 'medium')
             for curr_file in files:
                 count += 1
-                ret_val, added_to_vault = self._handle_file(curr_file, vault_ids, container_id, container_severity, count, count == len_artifacts + len_files)
+                ret_val, added_to_vault = self._handle_file(
+                    curr_file, vault_ids, container_id, container_severity, count, count == len_artifacts + len_files
+                )
 
         return action_result.set_status(phantom.APP_SUCCESS)
 
@@ -629,7 +766,9 @@ class SymantecDLPConnector(BaseConnector):
         if config.get('custom_severity'):
             try:
                 self._custom_severity = json.loads(config.get('custom_severity'))
-                self._custom_severity = {dlp_severity.lower(): phantom_severity for dlp_severity, phantom_severity in self._custom_severity.items()}
+                self._custom_severity = {
+                    dlp_severity.lower(): phantom_severity for dlp_severity, phantom_severity in self._custom_severity.items()
+                }
             except Exception as e:
                 error_message = self._get_error_message_from_exception(e)
                 self.debug_print('Error occurred while loading the json: {}'.format(error_message))
@@ -673,7 +812,9 @@ class SymantecDLPConnector(BaseConnector):
 
         for curr_incident_id in incident_ids:
 
-            ret_val, incident_detail = self._get_incident_details(action_result, curr_incident_id, config[DLP_JSON_EXTRACT_COMPONENTS])
+            ret_val, incident_detail = self._get_incident_details(
+                action_result, curr_incident_id, curr_incident_id, config[DLP_JSON_EXTRACT_COMPONENTS], True, True
+            )
 
             if phantom.is_fail(ret_val):
                 return ret_val
@@ -697,7 +838,10 @@ class SymantecDLPConnector(BaseConnector):
             results = pi.parse_incidents(queried_incident_details, self)
         except Exception as e:
             self.debug_print("The incidents parser script threw an exception : {}".format(self._get_error_message_from_exception(e)))
-            return action_result.set_status(phantom.APP_ERROR, "The incident parser script ran into an error, please see the logs for the complete stack trace")
+            return action_result.set_status(
+                phantom.APP_ERROR,
+                "The incident parser script ran into an error, please see the logs for the complete stack trace"
+            )
 
         no_of_containers = len(results)
 
@@ -719,6 +863,10 @@ class SymantecDLPConnector(BaseConnector):
             ret_val = self._test_connectivity(param)
         elif action == self.ACTION_ID_UPDATE_INCIDENT:
             ret_val = self._handle_update_incident(param)
+        elif action == self.ACTION_ID_LIST_INCIDENTS:
+            ret_val = self._handle_list_incidents(param)
+        elif action == self.ACTION_ID_GET_INCIDENT:
+            ret_val = self._handle_get_incident(param)
         elif action == self.ACTION_ID_ON_POLL:
             ret_val = self._on_poll(param)
 
@@ -727,9 +875,9 @@ class SymantecDLPConnector(BaseConnector):
 
 if __name__ == '__main__':
 
-    import sys
     # import pudb
     import argparse
+    import sys
 
     # pudb.set_trace()
 
@@ -738,12 +886,14 @@ if __name__ == '__main__':
     argparser.add_argument('input_test_json', help='Input Test JSON file')
     argparser.add_argument('-u', '--username', help='username', required=False)
     argparser.add_argument('-p', '--password', help='password', required=False)
+    argparser.add_argument('-v', '--verify', action='store_true', help='verify', required=False, default=False)
 
     args = argparser.parse_args()
     session_id = None
 
     username = args.username
     password = args.password
+    verify = args.verify
 
     if username is not None and password is None:
 
@@ -755,7 +905,7 @@ if __name__ == '__main__':
         try:
             print("Accessing the Login page")
             login_url = "{}login".format(BaseConnector._get_phantom_base_url())
-            r = requests.get(login_url, verify=False)
+            r = requests.get(login_url, verify=verify, timeout=60)
             csrftoken = r.cookies['csrftoken']
 
             data = dict()
@@ -768,15 +918,15 @@ if __name__ == '__main__':
             headers['Referer'] = login_url
 
             print("Logging into Platform to get the session id")
-            r2 = requests.post(login_url, verify=False, data=data, headers=headers)
+            r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=60)
             session_id = r2.cookies['sessionid']
         except Exception as e:
             print("Unable to get session id from the platfrom. Error: {}".format(str(e)))
-            exit(1)
+            sys.exit(1)
 
     if len(sys.argv) < 2:
         print("No test json specified as input")
-        exit(0)
+        sys.exit(0)
 
     with open(sys.argv[1]) as f:
         in_json = f.read()
@@ -792,4 +942,4 @@ if __name__ == '__main__':
         ret_val = connector._handle_action(json.dumps(in_json), None)
         print(json.dumps(json.loads(ret_val), indent=4))
 
-    exit(0)
+    sys.exit(0)

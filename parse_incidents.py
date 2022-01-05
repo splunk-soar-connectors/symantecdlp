@@ -1,6 +1,6 @@
 # File: parse_incidents.py
 #
-# Copyright (c) 2018-2021 Splunk Inc.
+# Copyright (c) 2018-2022 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,8 +14,10 @@
 # and limitations under the License.
 import os
 import tempfile
-from symantecdlp_consts import *
+
 from phantom.app import CONTAINS_VALIDATORS
+
+from symantecdlp_consts import *
 
 container_common = {
     "description": "Container added by Phantom",
