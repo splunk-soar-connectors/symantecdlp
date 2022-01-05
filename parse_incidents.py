@@ -655,7 +655,7 @@ def parse_incident(incident_type, incident, container, artifacts):
 def parse_incidents(incidents, base_connector):
 
     if not isinstance(incidents, list):
-        raise "incidents parameter is not a list"
+        raise TypeError("incidents parameter is not a list")
 
     results = []
 

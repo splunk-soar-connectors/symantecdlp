@@ -220,14 +220,15 @@ class SymantecDLPConnector(BaseConnector):
         if not input_dict:
             return input_dict
 
-        for k, v in input_dict.items():
+        for k in list(input_dict.keys()):
 
             new_k = k
+            v = input_dict[k]
 
             if k.startswith('_'):
                 new_k = k.strip('_')
                 input_dict[new_k] = v
-                del input_dict[k]
+                input_dict.pop(k)
 
             if isinstance(v, dict):
                 input_dict[new_k] = self._cleanse_key_names(v)
