@@ -379,7 +379,7 @@ class SymantecDLPConnector(BaseConnector):
             response = self._client.service.incidentList(report_id, creation_time_after)
         except Exception as e:
             message = 'SOAP call to DLP failed. {}'.format(self._get_error_message_from_exception(e))
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Occored: {}".format(message)))
+            return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Occurred: {}".format(message)))
 
         resp_dict = self._zeep_to_dict(response)
         incident_ids = resp_dict.get('incidentLongId')
@@ -426,26 +426,26 @@ class SymantecDLPConnector(BaseConnector):
             return action_result.get_status()
 
         config = self.get_config()
-        if (param.get(DLP_JSON_INCIDENT_LONG_ID) is None) and (param.get(DLP_JSON_INCIDENT_ID) is None):
+        if param.get(DLP_JSON_INCIDENT_LONG_ID) is None and param.get(DLP_JSON_INCIDENT_ID) is None:
             return action_result.set_status(
                 phantom.APP_ERROR,
-                'Please provide value for atleast one of the parameter incident_long_id or incident_id.'
+                'Please provide a value for at least one of the parameters incident_long_id or incident_id.'
             )
 
         incident_long_id = self._validate_integers(action_result, param.get(DLP_JSON_INCIDENT_LONG_ID), DLP_JSON_INCIDENT_LONG_ID)
 
-        if not (param.get(DLP_JSON_INCIDENT_LONG_ID) is None) and (incident_long_id is None):
+        if param.get(DLP_JSON_INCIDENT_LONG_ID) is not None and incident_long_id is None:
             return action_result.get_status()
 
         incident_id = self._validate_integers(action_result, param.get(DLP_JSON_INCIDENT_ID), DLP_JSON_INCIDENT_ID)
 
-        if not (param.get(DLP_JSON_INCIDENT_ID) is None) and (incident_id is None):
+        if param.get(DLP_JSON_INCIDENT_ID) is not None and incident_id is None:
             return action_result.get_status()
 
-        if not (incident_long_id is None) and (not (incident_id is None)):
+        if incident_long_id is not None and incident_id is not None:
             return action_result.set_status(
                 phantom.APP_ERROR,
-                'Please provide only one of the value for incident_long_id or incident_id not both.'
+                'Please specify only one of the following parameters: incident_long_id or incident_id.'
             )
 
         include_violations = param.get(DLP_JSON_INCLUDE_VIOLATIONS)
@@ -500,7 +500,7 @@ class SymantecDLPConnector(BaseConnector):
 
         binary_incident_id = incident_id
         kwargs = dict()
-        if not(incident_long_id is None):
+        if incident_long_id is not None:
             kwargs['incidentLongId'] = incident_long_id
             binary_incident_id = incident_long_id
         else:

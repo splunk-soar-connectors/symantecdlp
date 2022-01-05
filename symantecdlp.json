@@ -418,7 +418,7 @@
                     "order": 2
                 },
                 "include_history": {
-                    "description": "Whether the Web Service should returnincident history information",
+                    "description": "Whether the Web Service should return incident history information",
                     "data_type": "boolean",
                     "order": 3
                 }
@@ -851,7 +851,7 @@
                     "data_path": "action_result.data.*.incident.recipient.*.recipientIdentifier",
                     "data_type": "string",
                     "example_values": [
-                        "http://edgedl.me.gvt1.com/edgedl/delta-update/hfnkpimlhhgieaddgfemjhofmfblmnib/1.16e647889a74b001c56966e6fb7bb6d8d5c5e8272d0df4d46e35034f3b77e001/1.3d372163ae377d432eda14baa4e8f2e58086603347ed3c6a275e0f81030bc7ee/038e31d1bba6578f68cdf133b371b85a01119f2701f599cdfac773ae974cd140.crxd"
+                        "http://example.com/example/delta-update/example.crxd"
                     ]
                 },
                 {
