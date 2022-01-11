@@ -1,14 +1,23 @@
 # File: parse_incidents.py
-# Copyright (c) 2018-2021 Splunk Inc.
 #
-# SPLUNK CONFIDENTIAL - Use or disclosure of this material in whole or in part
-# without a valid written license from Splunk Inc. is PROHIBITED.
-
-
+# Copyright (c) 2018-2022 Splunk Inc.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software distributed under
+# the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND,
+# either express or implied. See the License for the specific language governing permissions
+# and limitations under the License.
 import os
 import tempfile
-from symantecdlp_consts import *
+
 from phantom.app import CONTAINS_VALIDATORS
+
+from symantecdlp_consts import *
 
 container_common = {
     "description": "Container added by Phantom",
@@ -646,7 +655,7 @@ def parse_incident(incident_type, incident, container, artifacts):
 def parse_incidents(incidents, base_connector):
 
     if not isinstance(incidents, list):
-        raise "incidents parameter is not a list"
+        raise TypeError("incidents parameter is not a list")
 
     results = []
 

@@ -5,17 +5,18 @@
     "publisher": "Splunk",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.py",
-    "app_version": "2.0.3",
-    "utctime_updated": "2021-08-26T13:39:31.000000Z",
+    "app_version": "2.1.5",
+    "utctime_updated": "2022-01-11T06:11:56.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
     "product_name": "Symantec DLP",
     "product_version_regex": ".*",
-    "min_phantom_version": "4.9.39220",
+    "fips_compliant": true,
+    "min_phantom_version": "5.0.0",
     "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) 2018-2021 Splunk Inc.",
+    "license": "Copyright (c) 2018-2022 Splunk Inc.",
     "latest_tested_versions": [
         "Symantec DLP version 15.8"
     ],
@@ -297,6 +298,679 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "list incidents",
+            "description": "List DLP incidents",
+            "verbose": "<b>creation_time</b> parameter is used to fetch the incidents that were created after the creation time.<br>The timestamp should be entered in <b>YYYY-MM-DD</b> or a valid &quotISO 8601 timestamp&quot format.<br>Some examples of valid time formats are:<ul><li>2018-09-24</li><li>2018-09-23T14:40:44Z</li><li>2018-09-23T14:40:44+05:30</li><li>2020-08-30T01:45:36.123Z</li><li>2021-12-13T21:20:37.593194+05:30</li></ul><br><b>report_id</b> specifies the ID of the saved report to execute on the Enforce Server from which we want to fetch incident.",
+            "type": "investigate",
+            "identifier": "list_incidents",
+            "read_only": true,
+            "parameters": {
+                "report_id": {
+                    "description": "ID of the saved report to fetch incident from",
+                    "data_type": "numeric",
+                    "order": 0,
+                    "contains": [
+                        "dlp report id"
+                    ],
+                    "primary": true,
+                    "required": true
+                },
+                "creation_time": {
+                    "description": "Fetch the incidents that were created after the creation time",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": true
+                }
+            },
+            "render": {
+                "type": "table"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.creation_time",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.parameter.report_id",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp report id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident_id",
+                    "data_type": "numeric",
+                    "column_name": "Incident ID",
+                    "column_order": 0,
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.summary.total_incidents",
+                    "data_type": "numeric",
+                    "example_values": [
+                        18
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "get incident",
+            "description": "Get DLP incident",
+            "verbose": "User needs to provide value for either <b>incident_id</b> or <b>incident_long_id</b> to get the incident details. It is recommended to use <b>incident_long_id</b> parameter to fetch incident details.",
+            "type": "investigate",
+            "identifier": "get_incident",
+            "read_only": true,
+            "parameters": {
+                "incident_id": {
+                    "description": "ID of incident to update",
+                    "data_type": "numeric",
+                    "order": 0,
+                    "primary": true,
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                "incident_long_id": {
+                    "description": "Long ID of incident to update",
+                    "data_type": "numeric",
+                    "order": 1,
+                    "primary": true,
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                "include_violations": {
+                    "description": "Whether the Web Service should return policy violation data with the basic incident details",
+                    "data_type": "boolean",
+                    "order": 2
+                },
+                "include_history": {
+                    "description": "Whether the Web Service should return incident history information",
+                    "data_type": "boolean",
+                    "order": 3
+                }
+            },
+            "render": {
+                "type": "table"
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.incident_id",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.incident_long_id",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.include_history",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.include_violations",
+                    "data_type": "boolean",
+                    "example_values": [
+                        true,
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.applicationName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Microsoft Host Process For Windows Services"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.applicationPath",
+                    "data_type": "string",
+                    "example_values": [
+                        "\\Device\\HarddiskVolume2\\Windows\\System32\\svchost.exe"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.blockedStatus",
+                    "data_type": "string",
+                    "column_name": "Blocked Status",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.incident.customAttributeGroup.*.customAttribute.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Group Attribute 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.customAttributeGroup.*.customAttribute.*.value",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.customAttributeGroup.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test Group 1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.dataOwner",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.detectionDate",
+                    "data_type": "string",
+                    "column_name": "Detection Date",
+                    "column_order": 7
+                },
+                {
+                    "data_path": "action_result.data.*.incident.detectionServer",
+                    "data_type": "string",
+                    "example_values": [
+                        "DLP SingleTierServer"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.eventDate",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-27T04:31:26-0800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentCreationDate",
+                    "data_type": "string",
+                    "column_name": "Incident Creation Date",
+                    "column_order": 8
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentHistory.*.actionType._value_1",
+                    "data_type": "string",
+                    "example_values": [
+                        "Status Changed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentHistory.*.actionType.actionTypeId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentHistory.*.date",
+                    "data_type": "string",
+                    "example_values": [
+                        "2021-12-27T04:32:46-0800"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentHistory.*.detail",
+                    "data_type": "string",
+                    "example_values": [
+                        "New"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentHistory.*.user",
+                    "data_type": "string",
+                    "example_values": [
+                        "Test"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentId",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp incident id"
+                    ],
+                    "example_values": [
+                        2882
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.incidentLongId",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp incident id"
+                    ],
+                    "example_values": [
+                        2882
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.isHTTPS",
+                    "data_type": "boolean",
+                    "example_values": [
+                        false
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.machineIP",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.17.191"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.machineName",
+                    "data_type": "string",
+                    "example_values": [
+                        "DLP158A1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.matchCount",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageBody",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageBodyContent",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.componentId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2921
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.componentLongId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2921
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.componentType._value_1",
+                    "data_type": "string",
+                    "example_values": [
+                        "Header"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.componentType.typeId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.documentFormat",
+                    "data_type": "string",
+                    "example_values": [
+                        "unicode"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Header"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.policyRule.ruleId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        102
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.policyRule.ruleName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Matching Keyword ABGD"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.violation.*.documentViolation",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.violation.*.fileSizeViolation",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.violation.*.imageViolation",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.policyRuleViolation.*.violation.*.violationText",
+                    "data_type": "string",
+                    "example_values": [
+                        "delta"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageHeader.ruleViolationCount",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageSource._value_1",
+                    "data_type": "string",
+                    "example_values": [
+                        "Endpoint"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageSource.sourceType",
+                    "data_type": "string",
+                    "example_values": [
+                        "ENDPOINT"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageType._value_1",
+                    "data_type": "string",
+                    "example_values": [
+                        "Endpoint HTTP"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.messageType.typeId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        27
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.originator.IPAddress",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.17.191"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.originator.originatorId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2721
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.originator.originatorIdLong",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2721
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.originator.port",
+                    "data_type": "numeric",
+                    "example_values": [
+                        0
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.originator.senderIdentifier",
+                    "data_type": "string",
+                    "example_values": [
+                        "10.1.17.191"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.otherViolatedPolicy.*.label",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.otherViolatedPolicy.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "test_policy-2"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.otherViolatedPolicy.*.policyId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        41
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.otherViolatedPolicy.*.version",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.policy.label",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.policy.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "Custom_Network_Endpoint_Policy"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.policy.policyId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        81
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.policy.version",
+                    "data_type": "numeric",
+                    "example_values": [
+                        5
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.recipient.*.IPAddress",
+                    "data_type": "string",
+                    "example_values": [
+                        "34.104.35.123"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.recipient.*.port",
+                    "data_type": "numeric",
+                    "example_values": [
+                        80
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.recipient.*.recipientId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2701
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.recipient.*.recipientIdLong",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2701
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.recipient.*.recipientIdentifier",
+                    "data_type": "string",
+                    "example_values": [
+                        "http://example.com/example/delta-update/example.crxd"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.ruleViolationCount",
+                    "data_type": "numeric",
+                    "column_name": "Rule Violation Count",
+                    "column_order": 6
+                },
+                {
+                    "data_path": "action_result.data.*.incident.severity",
+                    "data_type": "string",
+                    "column_name": "Severity",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.incident.status",
+                    "data_type": "string",
+                    "column_name": "Status",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.incident.superseded",
+                    "data_type": "string",
+                    "example_values": [
+                        "No"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.uniqueMessageId",
+                    "data_type": "string",
+                    "column_name": "Unique Message ID",
+                    "column_order": 5,
+                    "contains": [
+                        "unique message id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.userJustification",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.incident.userName",
+                    "data_type": "string",
+                    "example_values": [
+                        "NT AUTHORITY\\system"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.violatedPolicyRule.*.ruleId",
+                    "data_type": "numeric",
+                    "example_values": [
+                        102
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incident.violatedPolicyRule.*.ruleName",
+                    "data_type": "string",
+                    "example_values": [
+                        "Matching Keyword ABGD"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incidentId",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp incident id"
+                    ],
+                    "example_values": [
+                        2882
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incidentLongId",
+                    "data_type": "numeric",
+                    "column_name": "Incident ID",
+                    "column_order": 0,
+                    "contains": [
+                        "dlp incident id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.incidentType",
+                    "data_type": "string",
+                    "column_name": "Incident Type",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.statusCode",
+                    "data_type": "string",
+                    "example_values": [
+                        "SUCCESS"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "versions": "EQ(*)"
+        },
+        {
             "action": "on poll",
             "description": "Action handler for the ingest functionality",
             "type": "ingest",
@@ -328,5 +1002,81 @@
             "output": [],
             "versions": "EQ(*)"
         }
-    ]
+    ],
+    "pip_dependencies": {
+        "wheel": [
+            {
+                "module": "appdirs",
+                "input_file": "wheels/appdirs-1.4.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "attrs",
+                "input_file": "wheels/attrs-21.2.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "beautifulsoup4",
+                "input_file": "wheels/beautifulsoup4-4.9.1-py3-none-any.whl"
+            },
+            {
+                "module": "cached_property",
+                "input_file": "wheels/cached_property-1.5.2-py2.py3-none-any.whl"
+            },
+            {
+                "module": "certifi",
+                "input_file": "wheels/certifi-2021.10.8-py2.py3-none-any.whl"
+            },
+            {
+                "module": "chardet",
+                "input_file": "wheels/chardet-3.0.4-py2.py3-none-any.whl"
+            },
+            {
+                "module": "defusedxml",
+                "input_file": "wheels/defusedxml-0.7.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "idna",
+                "input_file": "wheels/idna-2.10-py2.py3-none-any.whl"
+            },
+            {
+                "module": "isodate",
+                "input_file": "wheels/isodate-0.6.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "lxml",
+                "input_file": "wheels/lxml-4.6.4-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl"
+            },
+            {
+                "module": "python_magic",
+                "input_file": "wheels/python_magic-0.4.18-py2.py3-none-any.whl"
+            },
+            {
+                "module": "pytz",
+                "input_file": "wheels/pytz-2021.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests",
+                "input_file": "wheels/requests-2.25.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "requests_toolbelt",
+                "input_file": "wheels/requests_toolbelt-0.9.1-py2.py3-none-any.whl"
+            },
+            {
+                "module": "six",
+                "input_file": "wheels/six-1.16.0-py2.py3-none-any.whl"
+            },
+            {
+                "module": "soupsieve",
+                "input_file": "wheels/soupsieve-2.3.1-py3-none-any.whl"
+            },
+            {
+                "module": "urllib3",
+                "input_file": "wheels/urllib3-1.26.7-py2.py3-none-any.whl"
+            },
+            {
+                "module": "zeep",
+                "input_file": "wheels/zeep-3.4.0-py2.py3-none-any.whl"
+            }
+        ]
+    }
 }
