@@ -2,7 +2,7 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk  
-Connector Version: 2\.1\.2  
+Connector Version: 2\.1\.7  
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
 Product Version Supported (regex): "\.\*"  
@@ -10,7 +10,7 @@ Minimum Product Version: 5\.0\.0
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
-[comment]: # " File: readme.md"
+[comment]: # " File: README.md"
 [comment]: # "  Copyright (c) 2018-2022 Splunk Inc."
 [comment]: # ""
 [comment]: # "Licensed under the Apache License, Version 2.0 (the 'License');"
