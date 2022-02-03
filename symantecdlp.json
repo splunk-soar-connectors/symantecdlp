@@ -12,7 +12,7 @@
     "product_name": "Symantec DLP",
     "product_version_regex": ".*",
     "fips_compliant": true,
-    "min_phantom_version": "5.0.0",
+    "min_phantom_version": "5.1.0",
     "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
