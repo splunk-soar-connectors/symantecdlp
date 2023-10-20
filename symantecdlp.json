@@ -1042,7 +1042,7 @@
             },
             {
                 "module": "python_magic",
-                "input_file": "wheels/shared/python_magic-0.4.27-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/python_magic-0.4.24-py2.py3-none-any.whl"
             },
             {
                 "module": "pytz",
