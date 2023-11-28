@@ -374,7 +374,7 @@ class SymantecDLPConnector(BaseConnector):
 
         date_status = self._validate_date(creation_time_after)
         if not date_status:
-            return action_result.set_status(phantom.APP_ERROR, DLP_TIMESTAMP_VALIDATION_FAILED_MSG)
+            return action_result.set_status(phantom.APP_ERROR, DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE)
 
         try:
             response = self._client.service.incidentList(report_id, creation_time_after)

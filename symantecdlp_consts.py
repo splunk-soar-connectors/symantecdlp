@@ -37,7 +37,7 @@ DLP_JSON_TOTAL_INCIDENTS = "total_incidents"
 DLP_JSON_INCLUDE_HISTORY = "include_history"
 DLP_JSON_INCLUDE_VIOLATIONS = "include_violations"
 DLP_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
-DLP_TIMESTAMP_VALIDATION_FAILED_MSG = 'Incorrect timestamp format, please enter in YYYY-MM-DD or valid ' \
+DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE = 'Incorrect timestamp format, please enter in YYYY-MM-DD or valid ' \
                                              'ISO 8601 timestamp format.'
 DLP_VALID_TIME = 'Time validation successful'
 
