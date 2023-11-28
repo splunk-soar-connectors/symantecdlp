@@ -1003,9 +1003,6 @@
             "versions": "EQ(*)"
         }
     ],
-    "pip_dependencies": {
-        "wheel": []
-    },
     "pip39_dependencies": {
         "wheel": [
             {
@@ -1018,15 +1015,15 @@
             },
             {
                 "module": "certifi",
-                "input_file": "wheels/py3/certifi-2023.7.22-py3-none-any.whl"
+                "input_file": "wheels/py3/certifi-2023.11.17-py3-none-any.whl"
             },
             {
                 "module": "charset_normalizer",
-                "input_file": "wheels/py39/charset_normalizer-3.3.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py39/charset_normalizer-3.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "idna",
-                "input_file": "wheels/py3/idna-3.4-py3-none-any.whl"
+                "input_file": "wheels/py3/idna-3.6-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1038,7 +1035,7 @@
             },
             {
                 "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-3.11.0-py3-none-any.whl"
+                "input_file": "wheels/py3/platformdirs-4.0.0-py3-none-any.whl"
             },
             {
                 "module": "python_magic",
@@ -1070,7 +1067,7 @@
             },
             {
                 "module": "urllib3",
-                "input_file": "wheels/py3/urllib3-2.0.7-py3-none-any.whl"
+                "input_file": "wheels/py3/urllib3-2.1.0-py3-none-any.whl"
             },
             {
                 "module": "zeep",
