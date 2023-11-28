@@ -1043,7 +1043,7 @@
             },
             {
                 "module": "pytz",
-                "input_file": "wheels/shared/pytz-2023.3.post1-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pytz-2023.3-py2.py3-none-any.whl"
             },
             {
                 "module": "requests",

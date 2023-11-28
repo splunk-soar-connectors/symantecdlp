@@ -1,4 +1,4 @@
 beautifulsoup4==4.12.2
 python-magic==0.4.24
-pytz==2023.3.post1
+pytz==2023.3
 zeep==4.2.1
