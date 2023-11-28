@@ -42,8 +42,8 @@ DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE = 'Incorrect timestamp format, please en
 DLP_VALID_TIME = 'Time validation successful'
 
 DLP_VALIDATE_INTEGER_MESSAGE = "Please provide a valid integer value in the {key} parameter"
-DLP_ERR_MESSAGE = "Unknown error occurred. Please check the asset configuration and|or action parameters."
-DLP_ERR_CODE_MESSAGE = "Error code unavailable"
+DLP_ERR0R_MESSAGE = "Unknown error occurred. Please check the asset configuration and|or action parameters."
+DLP_ERROR_CODE_MESSAGE = "Error code unavailable"
 DLP_UNKNOWN_SEVERITY = 'Unknown severity found. Severity {key} is not defined in custom severity. Hence, we are setting it as medium.'
 
 DLP_SEVERITY_DICT = {
