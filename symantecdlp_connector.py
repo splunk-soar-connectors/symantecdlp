@@ -200,20 +200,20 @@ class SymantecDLPConnector(BaseConnector):
         :return: error message
         """
 
-        error_msg = DLP_ERROR_MESSAGE
+        error_message = DLP_ERROR_MESSAGE
         error_code = DLP_ERROR_CODE_MESSAGE
         try:
             if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
-                    error_msg = e.args[1]
+                    error_message = e.args[1]
                 elif len(e.args) == 1:
                     error_code = DLP_ERROR_CODE_MESSAGE
-                    error_msg = e.args[0]
+                    error_message = e.args[0]
         except:
             pass
 
-        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+        return "Error Code: {0}. Error Message: {1}".format(error_code, error_message)
 
     def _cleanse_key_names(self, input_dict):
 
