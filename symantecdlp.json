@@ -16,7 +16,7 @@
     "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) 2018-2022 Splunk Inc.",
+    "license": "Copyright (c) 2018-2024 Splunk Inc.",
     "latest_tested_versions": [
         "Symantec DLP version 15.8"
     ],
@@ -1022,20 +1022,8 @@
                 "input_file": "wheels/shared/cached_property-1.5.2-py2.py3-none-any.whl"
             },
             {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2023.11.17-py3-none-any.whl"
-            },
-            {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py3/charset_normalizer-2.0.12-py3-none-any.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.6-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1043,7 +1031,7 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py36/lxml-4.9.3-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl"
+                "input_file": "wheels/py36/lxml-5.1.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "python_magic",
@@ -1052,10 +1040,6 @@
             {
                 "module": "pytz",
                 "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "requests",
-                "input_file": "wheels/shared/requests-2.27.1-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_toolbelt",
@@ -1068,10 +1052,6 @@
             {
                 "module": "soupsieve",
                 "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
-            },
-            {
-                "module": "urllib3",
-                "input_file": "wheels/shared/urllib3-1.26.18-py2.py3-none-any.whl"
             },
             {
                 "module": "zeep",
@@ -1087,7 +1067,7 @@
             },
             {
                 "module": "attrs",
-                "input_file": "wheels/py3/attrs-23.1.0-py3-none-any.whl"
+                "input_file": "wheels/py3/attrs-23.2.0-py3-none-any.whl"
             },
             {
                 "module": "beautifulsoup4",
@@ -1098,20 +1078,8 @@
                 "input_file": "wheels/shared/cached_property-1.5.2-py2.py3-none-any.whl"
             },
             {
-                "module": "certifi",
-                "input_file": "wheels/py3/certifi-2023.11.17-py3-none-any.whl"
-            },
-            {
-                "module": "charset_normalizer",
-                "input_file": "wheels/py39/charset_normalizer-3.3.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
-            },
-            {
                 "module": "defusedxml",
                 "input_file": "wheels/shared/defusedxml-0.7.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "idna",
-                "input_file": "wheels/py3/idna-3.6-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1119,7 +1087,7 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py39/lxml-4.9.3-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_24_x86_64.whl"
+                "input_file": "wheels/py39/lxml-5.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "python_magic",
@@ -1128,10 +1096,6 @@
             {
                 "module": "pytz",
                 "input_file": "wheels/shared/pytz-2021.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "requests",
-                "input_file": "wheels/py3/requests-2.31.0-py3-none-any.whl"
             },
             {
                 "module": "requests_toolbelt",
@@ -1144,10 +1108,6 @@
             {
                 "module": "soupsieve",
                 "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
-            },
-            {
-                "module": "urllib3",
-                "input_file": "wheels/py3/urllib3-2.1.0-py3-none-any.whl"
             },
             {
                 "module": "zeep",
