@@ -29,10 +29,10 @@ import requests
 from bs4 import UnicodeDammit
 from phantom.action_result import ActionResult
 from phantom.base_connector import BaseConnector
+from pythonzeep import Client, Settings, helpers
+from pythonzeep.transports import Transport
 from pytz import timezone, utc
 from requests.auth import AuthBase, HTTPBasicAuth
-from zeep import Client, Settings, helpers
-from zeep.transports import Transport
 
 import parse_incidents as pi
 # THIS Connector imports
