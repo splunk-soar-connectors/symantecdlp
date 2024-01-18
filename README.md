@@ -2,7 +2,7 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk  
-Connector Version: 2.1.9  
+Connector Version: 2.1.11-beta  
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
 Product Version Supported (regex): ".\*"  
