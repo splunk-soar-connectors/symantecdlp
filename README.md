@@ -2,11 +2,11 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk  
-Connector Version: 2\.1\.9  
+Connector Version: 2.1.9  
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
-Product Version Supported (regex): "\.\*"  
-Minimum Product Version: 5\.1\.0  
+Product Version Supported (regex): ".\*"  
+Minimum Product Version: 5.1.0  
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
@@ -28,13 +28,13 @@ This app supports incident update and incident ingestion from Symantec Data Loss
 
 ### Ingestion
 
-#### Schedule \| Interval Polling
+#### Schedule | Interval Polling
 
--   During scheduled \| interval polling, the app will start from the number of days specified in
+-   During scheduled | interval polling, the app will start from the number of days specified in
     **first_scheduled_ingestion_span** and will ingest up to the number of incidents specified in
     the **max_containers** (Default value 10) in configuration parameter per cycle. Then it
     remembers the last ingested 'incident_id' and stores it in the state file against the key
-    'last_incident_ingested'. For the next scheduled \| interval cycles, ingestion will start from
+    'last_incident_ingested'. For the next scheduled | interval cycles, ingestion will start from
     the last_incident_ingested in the state file and will ingest up to the number of incidents
     specified in the **max_containers** .
 -   The number of incidents ingested will depend on the specified **max_containers** and
@@ -78,17 +78,17 @@ The below configuration variables are required for this Connector to operate.  T
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------
-**url** |  required  | string | Device URL, e\.g\. https\://mysymcdlp\.contoso\.com
-**verify\_server\_cert** |  optional  | boolean | Verify server certificate
+**url** |  required  | string | Device URL, e.g. https://mysymcdlp.contoso.com
+**verify_server_cert** |  optional  | boolean | Verify server certificate
 **username** |  required  | string | Username
 **password** |  required  | password | Password
-**report\_id** |  required  | numeric | Report ID to ingest data from
-**extract\_components** |  optional  | boolean | Extract additional components
-**poll\_now\_ingestion\_span** |  optional  | numeric | Poll last n days for 'Poll Now' \(Default\: 15\)
-**first\_scheduled\_ingestion\_span** |  optional  | numeric | Poll last n days for first scheduled polling \(Default\: 10\)
-**max\_containers** |  optional  | numeric | Maximum number of containers to ingest during scheduled polling \(Default\: 10\)
+**report_id** |  required  | numeric | Report ID to ingest data from
+**extract_components** |  optional  | boolean | Extract additional components
+**poll_now_ingestion_span** |  optional  | numeric | Poll last n days for 'Poll Now' (Default: 15)
+**first_scheduled_ingestion_span** |  optional  | numeric | Poll last n days for first scheduled polling (Default: 10)
+**max_containers** |  optional  | numeric | Maximum number of containers to ingest during scheduled polling (Default: 10)
 **timezone** |  required  | timezone | Device timezone
-**custom\_severity** |  optional  | string | JSON dictionary represented as a serialized JSON string \(More details in the documentation\)
+**custom_severity** |  optional  | string | JSON dictionary represented as a serialized JSON string (More details in the documentation)
 
 ### Supported Actions  
 [test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity  
@@ -115,36 +115,36 @@ Update a DLP incident
 Type: **generic**  
 Read only: **False**
 
-For custom attributes defined in the administration console of DLP, use the custom\_fields parameter\. The parameter must be a JSON string with the key being the name of the attribute and the value being the value of the attribute\.
+For custom attributes defined in the administration console of DLP, use the custom_fields parameter. The parameter must be a JSON string with the key being the name of the attribute and the value being the value of the attribute.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**incident\_id** |  required  | ID of incident to update | numeric |  `dlp incident id` 
+**incident_id** |  required  | ID of incident to update | numeric |  `dlp incident id` 
 **status** |  optional  | New status of incident | string | 
 **severity** |  optional  | New severity of incident | string | 
-**remediation\_status** |  optional  | New remediation status of incident | string | 
-**remediation\_location** |  optional  | Represents the remediation location of the incident | string | 
+**remediation_status** |  optional  | New remediation status of incident | string | 
+**remediation_location** |  optional  | Represents the remediation location of the incident | string | 
 **note** |  optional  | Represents the note of the incident | string | 
-**custom\_fields** |  optional  | JSON string representing custom fields to update \(defined in administration console\) | string | 
+**custom_fields** |  optional  | JSON string representing custom fields to update (defined in administration console) | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.custom\_fields | string | 
-action\_result\.parameter\.incident\_id | numeric |  `dlp incident id` 
-action\_result\.parameter\.note | string | 
-action\_result\.parameter\.remediation\_location | string | 
-action\_result\.parameter\.remediation\_status | string | 
-action\_result\.parameter\.severity | string | 
-action\_result\.parameter\.status | string | 
-action\_result\.data\.\*\.batchId | string | 
-action\_result\.data\.\*\.statusCode | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.custom_fields | string |  |   {'custom_attribute': 'test_value'} 
+action_result.parameter.incident_id | numeric |  `dlp incident id`  |   49487 
+action_result.parameter.note | string |  |   This is test note 
+action_result.parameter.remediation_location | string |  |   test location 
+action_result.parameter.remediation_status | string |  |   BLOCKED 
+action_result.parameter.severity | string |  |   MEDIUM 
+action_result.parameter.status | string |  |   In Progress 
+action_result.data.\*.batchId | string |  |   304ee0ec-cd7c-4c92-ab28-8a561d9c4d7b 
+action_result.data.\*.statusCode | string |  |   SUCCESS 
+action_result.summary | string |  |  
+action_result.message | string |  |   Successfully updated incident 
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'list incidents'
 List DLP incidents
@@ -152,26 +152,26 @@ List DLP incidents
 Type: **investigate**  
 Read only: **True**
 
-<b>creation\_time</b> parameter is used to fetch the incidents that were created after the creation time\.<br>The timestamp should be entered in <b>YYYY\-MM\-DD</b> or a valid &quotISO 8601 timestamp&quot format\.<br>Some examples of valid time formats are\:<ul><li>2018\-09\-24</li><li>2018\-09\-23T14\:40\:44Z</li><li>2018\-09\-23T14\:40\:44\+05\:30</li><li>2020\-08\-30T01\:45\:36\.123Z</li><li>2021\-12\-13T21\:20\:37\.593194\+05\:30</li></ul><br><b>report\_id</b> specifies the ID of the saved report to execute on the Enforce Server from which we want to fetch incident\.
+<b>creation_time</b> parameter is used to fetch the incidents that were created after the creation time.<br>The timestamp should be entered in <b>YYYY-MM-DD</b> or a valid &quotISO 8601 timestamp&quot format.<br>Some examples of valid time formats are:<ul><li>2018-09-24</li><li>2018-09-23T14:40:44Z</li><li>2018-09-23T14:40:44+05:30</li><li>2020-08-30T01:45:36.123Z</li><li>2021-12-13T21:20:37.593194+05:30</li></ul><br><b>report_id</b> specifies the ID of the saved report to execute on the Enforce Server from which we want to fetch incident.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**report\_id** |  required  | ID of the saved report to fetch incident from | numeric |  `dlp report id` 
-**creation\_time** |  required  | Fetch the incidents that were created after the creation time | string | 
+**report_id** |  required  | ID of the saved report to fetch incident from | numeric |  `dlp report id` 
+**creation_time** |  required  | Fetch the incidents that were created after the creation time | string | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.creation\_time | string | 
-action\_result\.parameter\.report\_id | numeric |  `dlp report id` 
-action\_result\.data\.\*\.incident\_id | numeric |  `dlp incident id` 
-action\_result\.summary | string | 
-action\_result\.summary\.total\_incidents | numeric | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.creation_time | string |  |  
+action_result.parameter.report_id | numeric |  `dlp report id`  |  
+action_result.data.\*.incident_id | numeric |  `dlp incident id`  |  
+action_result.summary | string |  |  
+action_result.summary.total_incidents | numeric |  |   18 
+action_result.message | string |  |  
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'get incident'
 Get DLP incident
@@ -179,100 +179,100 @@ Get DLP incident
 Type: **investigate**  
 Read only: **True**
 
-User needs to provide value for either <b>incident\_id</b> or <b>incident\_long\_id</b> to get the incident details\. It is recommended to use <b>incident\_long\_id</b> parameter to fetch incident details\.
+User needs to provide value for either <b>incident_id</b> or <b>incident_long_id</b> to get the incident details. It is recommended to use <b>incident_long_id</b> parameter to fetch incident details.
 
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**incident\_id** |  optional  | ID of incident to update | numeric |  `dlp incident id` 
-**incident\_long\_id** |  optional  | Long ID of incident to update | numeric |  `dlp incident id` 
-**include\_violations** |  optional  | Whether the Web Service should return policy violation data with the basic incident details | boolean | 
-**include\_history** |  optional  | Whether the Web Service should return incident history information | boolean | 
+**incident_id** |  optional  | ID of incident to update | numeric |  `dlp incident id` 
+**incident_long_id** |  optional  | Long ID of incident to update | numeric |  `dlp incident id` 
+**include_violations** |  optional  | Whether the Web Service should return policy violation data with the basic incident details | boolean | 
+**include_history** |  optional  | Whether the Web Service should return incident history information | boolean | 
 
 #### Action Output
-DATA PATH | TYPE | CONTAINS
---------- | ---- | --------
-action\_result\.status | string | 
-action\_result\.parameter\.incident\_id | numeric |  `dlp incident id` 
-action\_result\.parameter\.incident\_long\_id | numeric |  `dlp incident id` 
-action\_result\.parameter\.include\_history | boolean | 
-action\_result\.parameter\.include\_violations | boolean | 
-action\_result\.data\.\*\.incident\.applicationName | string | 
-action\_result\.data\.\*\.incident\.applicationPath | string | 
-action\_result\.data\.\*\.incident\.blockedStatus | string | 
-action\_result\.data\.\*\.incident\.customAttributeGroup\.\*\.customAttribute\.\*\.name | string | 
-action\_result\.data\.\*\.incident\.customAttributeGroup\.\*\.customAttribute\.\*\.value | string | 
-action\_result\.data\.\*\.incident\.customAttributeGroup\.\*\.name | string | 
-action\_result\.data\.\*\.incident\.dataOwner | string | 
-action\_result\.data\.\*\.incident\.detectionDate | string | 
-action\_result\.data\.\*\.incident\.detectionServer | string | 
-action\_result\.data\.\*\.incident\.eventDate | string | 
-action\_result\.data\.\*\.incident\.incidentCreationDate | string | 
-action\_result\.data\.\*\.incident\.incidentHistory\.\*\.actionType\.\_value\_1 | string | 
-action\_result\.data\.\*\.incident\.incidentHistory\.\*\.actionType\.actionTypeId | numeric | 
-action\_result\.data\.\*\.incident\.incidentHistory\.\*\.date | string | 
-action\_result\.data\.\*\.incident\.incidentHistory\.\*\.detail | string | 
-action\_result\.data\.\*\.incident\.incidentHistory\.\*\.user | string | 
-action\_result\.data\.\*\.incident\.incidentId | numeric |  `dlp incident id` 
-action\_result\.data\.\*\.incident\.incidentLongId | numeric |  `dlp incident id` 
-action\_result\.data\.\*\.incident\.isHTTPS | boolean | 
-action\_result\.data\.\*\.incident\.machineIP | string | 
-action\_result\.data\.\*\.incident\.machineName | string | 
-action\_result\.data\.\*\.incident\.matchCount | numeric | 
-action\_result\.data\.\*\.incident\.messageBody | string | 
-action\_result\.data\.\*\.incident\.messageBodyContent | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.componentId | numeric | 
-action\_result\.data\.\*\.incident\.messageHeader\.componentLongId | numeric | 
-action\_result\.data\.\*\.incident\.messageHeader\.componentType\.\_value\_1 | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.componentType\.typeId | numeric | 
-action\_result\.data\.\*\.incident\.messageHeader\.documentFormat | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.name | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.policyRule\.ruleId | numeric | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.policyRule\.ruleName | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.violation\.\*\.documentViolation | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.violation\.\*\.fileSizeViolation | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.violation\.\*\.imageViolation | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.policyRuleViolation\.\*\.violation\.\*\.violationText | string | 
-action\_result\.data\.\*\.incident\.messageHeader\.ruleViolationCount | numeric | 
-action\_result\.data\.\*\.incident\.messageSource\.\_value\_1 | string | 
-action\_result\.data\.\*\.incident\.messageSource\.sourceType | string | 
-action\_result\.data\.\*\.incident\.messageType\.\_value\_1 | string | 
-action\_result\.data\.\*\.incident\.messageType\.typeId | numeric | 
-action\_result\.data\.\*\.incident\.originator\.IPAddress | string | 
-action\_result\.data\.\*\.incident\.originator\.originatorId | numeric | 
-action\_result\.data\.\*\.incident\.originator\.originatorIdLong | numeric | 
-action\_result\.data\.\*\.incident\.originator\.port | numeric | 
-action\_result\.data\.\*\.incident\.originator\.senderIdentifier | string | 
-action\_result\.data\.\*\.incident\.otherViolatedPolicy\.\*\.label | string | 
-action\_result\.data\.\*\.incident\.otherViolatedPolicy\.\*\.name | string | 
-action\_result\.data\.\*\.incident\.otherViolatedPolicy\.\*\.policyId | numeric | 
-action\_result\.data\.\*\.incident\.otherViolatedPolicy\.\*\.version | numeric | 
-action\_result\.data\.\*\.incident\.policy\.label | string | 
-action\_result\.data\.\*\.incident\.policy\.name | string | 
-action\_result\.data\.\*\.incident\.policy\.policyId | numeric | 
-action\_result\.data\.\*\.incident\.policy\.version | numeric | 
-action\_result\.data\.\*\.incident\.recipient\.\*\.IPAddress | string | 
-action\_result\.data\.\*\.incident\.recipient\.\*\.port | numeric | 
-action\_result\.data\.\*\.incident\.recipient\.\*\.recipientId | numeric | 
-action\_result\.data\.\*\.incident\.recipient\.\*\.recipientIdLong | numeric | 
-action\_result\.data\.\*\.incident\.recipient\.\*\.recipientIdentifier | string | 
-action\_result\.data\.\*\.incident\.ruleViolationCount | numeric | 
-action\_result\.data\.\*\.incident\.severity | string | 
-action\_result\.data\.\*\.incident\.status | string | 
-action\_result\.data\.\*\.incident\.superseded | string | 
-action\_result\.data\.\*\.incident\.uniqueMessageId | string |  `unique message id` 
-action\_result\.data\.\*\.incident\.userJustification | string | 
-action\_result\.data\.\*\.incident\.userName | string | 
-action\_result\.data\.\*\.incident\.violatedPolicyRule\.\*\.ruleId | numeric | 
-action\_result\.data\.\*\.incident\.violatedPolicyRule\.\*\.ruleName | string | 
-action\_result\.data\.\*\.incidentId | numeric |  `dlp incident id` 
-action\_result\.data\.\*\.incidentLongId | numeric |  `dlp incident id` 
-action\_result\.data\.\*\.incidentType | string | 
-action\_result\.data\.\*\.statusCode | string | 
-action\_result\.summary | string | 
-action\_result\.message | string | 
-summary\.total\_objects | numeric | 
-summary\.total\_objects\_successful | numeric |   
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string |  |   success  failed 
+action_result.parameter.incident_id | numeric |  `dlp incident id`  |  
+action_result.parameter.incident_long_id | numeric |  `dlp incident id`  |  
+action_result.parameter.include_history | boolean |  |   True  False 
+action_result.parameter.include_violations | boolean |  |   True  False 
+action_result.data.\*.incident.applicationName | string |  |   Microsoft Host Process For Windows Services 
+action_result.data.\*.incident.applicationPath | string |  |   \\Device\\HarddiskVolume2\\Windows\\System32\\svchost.exe 
+action_result.data.\*.incident.blockedStatus | string |  |  
+action_result.data.\*.incident.customAttributeGroup.\*.customAttribute.\*.name | string |  |   Group Attribute 1 
+action_result.data.\*.incident.customAttributeGroup.\*.customAttribute.\*.value | string |  |  
+action_result.data.\*.incident.customAttributeGroup.\*.name | string |  |   Test Group 1 
+action_result.data.\*.incident.dataOwner | string |  |  
+action_result.data.\*.incident.detectionDate | string |  |  
+action_result.data.\*.incident.detectionServer | string |  |   DLP SingleTierServer 
+action_result.data.\*.incident.eventDate | string |  |   2021-12-27T04:31:26-0800 
+action_result.data.\*.incident.incidentCreationDate | string |  |  
+action_result.data.\*.incident.incidentHistory.\*.actionType._value_1 | string |  |   Status Changed 
+action_result.data.\*.incident.incidentHistory.\*.actionType.actionTypeId | numeric |  |   2 
+action_result.data.\*.incident.incidentHistory.\*.date | string |  |   2021-12-27T04:32:46-0800 
+action_result.data.\*.incident.incidentHistory.\*.detail | string |  |   New 
+action_result.data.\*.incident.incidentHistory.\*.user | string |  |   Test 
+action_result.data.\*.incident.incidentId | numeric |  `dlp incident id`  |   2882 
+action_result.data.\*.incident.incidentLongId | numeric |  `dlp incident id`  |   2882 
+action_result.data.\*.incident.isHTTPS | boolean |  |   False 
+action_result.data.\*.incident.machineIP | string |  |   10.1.17.191 
+action_result.data.\*.incident.machineName | string |  |   DLP158A1 
+action_result.data.\*.incident.matchCount | numeric |  |   1 
+action_result.data.\*.incident.messageBody | string |  |  
+action_result.data.\*.incident.messageBodyContent | string |  |  
+action_result.data.\*.incident.messageHeader.componentId | numeric |  |   2921 
+action_result.data.\*.incident.messageHeader.componentLongId | numeric |  |   2921 
+action_result.data.\*.incident.messageHeader.componentType._value_1 | string |  |   Header 
+action_result.data.\*.incident.messageHeader.componentType.typeId | numeric |  |   1 
+action_result.data.\*.incident.messageHeader.documentFormat | string |  |   unicode 
+action_result.data.\*.incident.messageHeader.name | string |  |   Header 
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.policyRule.ruleId | numeric |  |   102 
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.policyRule.ruleName | string |  |   Matching Keyword ABGD 
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.violation.\*.documentViolation | string |  |  
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.violation.\*.fileSizeViolation | string |  |  
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.violation.\*.imageViolation | string |  |  
+action_result.data.\*.incident.messageHeader.policyRuleViolation.\*.violation.\*.violationText | string |  |   delta 
+action_result.data.\*.incident.messageHeader.ruleViolationCount | numeric |  |   1 
+action_result.data.\*.incident.messageSource._value_1 | string |  |   Endpoint 
+action_result.data.\*.incident.messageSource.sourceType | string |  |   ENDPOINT 
+action_result.data.\*.incident.messageType._value_1 | string |  |   Endpoint HTTP 
+action_result.data.\*.incident.messageType.typeId | numeric |  |   27 
+action_result.data.\*.incident.originator.IPAddress | string |  |   10.1.17.191 
+action_result.data.\*.incident.originator.originatorId | numeric |  |   2721 
+action_result.data.\*.incident.originator.originatorIdLong | numeric |  |   2721 
+action_result.data.\*.incident.originator.port | numeric |  |   0 
+action_result.data.\*.incident.originator.senderIdentifier | string |  |   10.1.17.191 
+action_result.data.\*.incident.otherViolatedPolicy.\*.label | string |  |  
+action_result.data.\*.incident.otherViolatedPolicy.\*.name | string |  |   test_policy-2 
+action_result.data.\*.incident.otherViolatedPolicy.\*.policyId | numeric |  |   41 
+action_result.data.\*.incident.otherViolatedPolicy.\*.version | numeric |  |   4 
+action_result.data.\*.incident.policy.label | string |  |  
+action_result.data.\*.incident.policy.name | string |  |   Custom_Network_Endpoint_Policy 
+action_result.data.\*.incident.policy.policyId | numeric |  |   81 
+action_result.data.\*.incident.policy.version | numeric |  |   5 
+action_result.data.\*.incident.recipient.\*.IPAddress | string |  |   34.104.35.123 
+action_result.data.\*.incident.recipient.\*.port | numeric |  |   80 
+action_result.data.\*.incident.recipient.\*.recipientId | numeric |  |   2701 
+action_result.data.\*.incident.recipient.\*.recipientIdLong | numeric |  |   2701 
+action_result.data.\*.incident.recipient.\*.recipientIdentifier | string |  |   http://example.com/example/delta-update/example.crxd 
+action_result.data.\*.incident.ruleViolationCount | numeric |  |  
+action_result.data.\*.incident.severity | string |  |  
+action_result.data.\*.incident.status | string |  |  
+action_result.data.\*.incident.superseded | string |  |   No 
+action_result.data.\*.incident.uniqueMessageId | string |  `unique message id`  |  
+action_result.data.\*.incident.userJustification | string |  |  
+action_result.data.\*.incident.userName | string |  |   NT AUTHORITY\\system 
+action_result.data.\*.incident.violatedPolicyRule.\*.ruleId | numeric |  |   102 
+action_result.data.\*.incident.violatedPolicyRule.\*.ruleName | string |  |   Matching Keyword ABGD 
+action_result.data.\*.incidentId | numeric |  `dlp incident id`  |   2882 
+action_result.data.\*.incidentLongId | numeric |  `dlp incident id`  |  
+action_result.data.\*.incidentType | string |  |  
+action_result.data.\*.statusCode | string |  |   SUCCESS 
+action_result.summary | string |  |  
+action_result.message | string |  |  
+summary.total_objects | numeric |  |   1 
+summary.total_objects_successful | numeric |  |   1   
 
 ## action: 'on poll'
 Action handler for the ingest functionality
@@ -283,11 +283,11 @@ Read only: **True**
 #### Action Parameters
 PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 --------- | -------- | ----------- | ---- | --------
-**start\_time** |  optional  | Parameter ignored in this app | numeric | 
-**end\_time** |  optional  | Parameter ignored in this app | numeric | 
-**container\_id** |  optional  | Parameter ignored in this app | string | 
-**container\_count** |  optional  | Maximum number of emails to ingest | numeric | 
-**artifact\_count** |  optional  | Parameter ignored in this app | numeric | 
+**start_time** |  optional  | Parameter ignored in this app | numeric | 
+**end_time** |  optional  | Parameter ignored in this app | numeric | 
+**container_id** |  optional  | Parameter ignored in this app | string | 
+**container_count** |  optional  | Maximum number of emails to ingest | numeric | 
+**artifact_count** |  optional  | Parameter ignored in this app | numeric | 
 
 #### Action Output
 No Output
