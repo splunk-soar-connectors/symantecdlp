@@ -5,7 +5,7 @@
     "publisher": "Splunk",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.py",
-    "app_version": "2.1.11-beta",
+    "app_version": "2.1.11",
     "utctime_updated": "2022-02-04T16:40:17.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
