@@ -132,7 +132,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string |  |   success  failed 
-action_result.parameter.custom_fields | string |  |   {'custom_attribute': 'test_value'} 
+action_result.parameter.custom_fields | string |  |   {"custom_attribute": "test_value"} 
 action_result.parameter.incident_id | numeric |  `dlp incident id`  |   49487 
 action_result.parameter.note | string |  |   This is test note 
 action_result.parameter.remediation_location | string |  |   test location 
