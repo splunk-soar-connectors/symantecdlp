@@ -201,9 +201,7 @@
                     "data_path": "action_result.parameter.custom_fields",
                     "data_type": "string",
                     "example_values": [
-                        {
-                            "custom_attribute": "test_value"
-                        }
+                        "{\"custom_attribute\": \"test_value\"}"
                     ]
                 },
                 {
