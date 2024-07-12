@@ -11,7 +11,7 @@ Minimum Product Version: 6.2.1
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
 [comment]: # " File: README.md"
-[comment]: # "  Copyright (c) 2018-2023 Splunk Inc."
+[comment]: # "  Copyright (c) 2018-2024 Splunk Inc."
 [comment]: # ""
 [comment]: # "Licensed under the Apache License, Version 2.0 (the 'License');"
 [comment]: # "you may not use this file except in compliance with the License."
