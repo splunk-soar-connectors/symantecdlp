@@ -2,11 +2,11 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk  
-Connector Version: 2.1.9  
+Connector Version: 2.2.0  
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.1.0  
+Minimum Product Version: 6.2.1  
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
