@@ -1012,10 +1012,6 @@
                 "input_file": "wheels/py3/attrs-22.2.0-py3-none-any.whl"
             },
             {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
                 "module": "cached_property",
                 "input_file": "wheels/shared/cached_property-1.5.2-py2.py3-none-any.whl"
             },
@@ -1029,7 +1025,7 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py36/lxml-5.1.0-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py36/lxml-5.2.2-cp36-cp36m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "python_magic",
@@ -1046,10 +1042,6 @@
             {
                 "module": "six",
                 "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.3.2.post1-py3-none-any.whl"
             },
             {
                 "module": "zeep",
@@ -1068,10 +1060,6 @@
                 "input_file": "wheels/py3/attrs-23.2.0-py3-none-any.whl"
             },
             {
-                "module": "beautifulsoup4",
-                "input_file": "wheels/py3/beautifulsoup4-4.9.1-py3-none-any.whl"
-            },
-            {
                 "module": "cached_property",
                 "input_file": "wheels/shared/cached_property-1.5.2-py2.py3-none-any.whl"
             },
@@ -1085,7 +1073,7 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py39/lxml-5.1.0-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
+                "input_file": "wheels/py39/lxml-5.2.2-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl"
             },
             {
                 "module": "python_magic",
@@ -1102,10 +1090,6 @@
             {
                 "module": "six",
                 "input_file": "wheels/shared/six-1.16.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "soupsieve",
-                "input_file": "wheels/py3/soupsieve-2.5-py3-none-any.whl"
             },
             {
                 "module": "zeep",
