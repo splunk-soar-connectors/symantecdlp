@@ -1,2 +1,1 @@
 **Unreleased**
-* Updated lxml package due to vulnerability [PAPP-31092]
