@@ -1,6 +1,6 @@
 # File: symantecdlp_connector.py
 #
-# Copyright (c) 2018-2022 Splunk Inc.
+# Copyright (c) 2018-2024 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -200,20 +200,20 @@ class SymantecDLPConnector(BaseConnector):
         :return: error message
         """
 
-        error_msg = DLP_ERR_MESSAGE
-        error_code = DLP_ERR_CODE_MESSAGE
+        error_message = DLP_ERROR_MESSAGE
+        error_code = DLP_ERROR_CODE_MESSAGE
         try:
             if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
-                    error_msg = e.args[1]
+                    error_message = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = DLP_ERR_CODE_MESSAGE
-                    error_msg = e.args[0]
+                    error_code = DLP_ERROR_CODE_MESSAGE
+                    error_message = e.args[0]
         except:
             pass
 
-        return "Error Code: {0}. Error Message: {1}".format(error_code, error_msg)
+        return "Error Code: {0}. Error Message: {1}".format(error_code, error_message)
 
     def _cleanse_key_names(self, input_dict):
 
@@ -374,7 +374,7 @@ class SymantecDLPConnector(BaseConnector):
 
         date_status = self._validate_date(creation_time_after)
         if not date_status:
-            return action_result.set_status(phantom.APP_ERROR, DLP_TIMESTAMP_VALIDATION_FAILED_MSG)
+            return action_result.set_status(phantom.APP_ERROR, DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE)
 
         try:
             response = self._client.service.incidentList(report_id, creation_time_after)
