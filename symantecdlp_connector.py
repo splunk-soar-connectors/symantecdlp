@@ -200,15 +200,17 @@ class SymantecDLPConnector(BaseConnector):
         :return: error message
         """
 
-        error_message = DLP_ERR_MESSAGE
-        error_code = DLP_ERR_CODE_MESSAGE
+        error_message = DLP_ERROR_MESSAGE
+        error_code = DLP_ERROR_CODE_MESSAGE
+
         try:
             if hasattr(e, "args"):
                 if len(e.args) > 1:
                     error_code = e.args[0]
                     error_message = e.args[1]
                 elif len(e.args) == 1:
-                    error_code = DLP_ERR_CODE_MESSAGE
+
+                    error_code = DLP_ERROR_CODE_MESSAGE
                     error_message = e.args[0]
         except:
             pass

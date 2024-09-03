@@ -2,11 +2,11 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk  
-Connector Version: 2.1.10  
+Version: 2.2.0  
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 5.1.0  
+Minimum Product Version: 6.2.1  
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
@@ -132,7 +132,7 @@ PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
 DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
 --------- | ---- | -------- | --------------
 action_result.status | string |  |   success  failed 
-action_result.parameter.custom_fields | string |  |   {"custom_attribute": "test_value"} 
+action_result.parameter.custom_fields | string |  |   {'custom_attribute': 'test_value'} 
 action_result.parameter.incident_id | numeric |  `dlp incident id`  |   49487 
 action_result.parameter.note | string |  |   This is test note 
 action_result.parameter.remediation_location | string |  |   test location 
