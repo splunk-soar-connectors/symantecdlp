@@ -35,8 +35,6 @@ from zeep import Client, Settings, helpers
 from zeep.transports import Transport
 
 import parse_incidents as pi
-
-# THIS Connector imports
 from symantecdlp_consts import *
 
 
