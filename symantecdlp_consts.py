@@ -37,17 +37,12 @@ DLP_JSON_TOTAL_INCIDENTS = "total_incidents"
 DLP_JSON_INCLUDE_HISTORY = "include_history"
 DLP_JSON_INCLUDE_VIOLATIONS = "include_violations"
 DLP_TIME_FORMAT = "%Y-%m-%dT%H:%M:%S%z"
-DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE = 'Incorrect timestamp format, please enter in YYYY-MM-DD or valid ' \
-                                             'ISO 8601 timestamp format.'
-DLP_VALID_TIME = 'Time validation successful'
+DLP_TIMESTAMP_VALIDATION_FAILED_MESSAGE = "Incorrect timestamp format, please enter in YYYY-MM-DD or valid " "ISO 8601 timestamp format."
+DLP_VALID_TIME = "Time validation successful"
 
 DLP_VALIDATE_INTEGER_MESSAGE = "Please provide a valid integer value in the {key} parameter"
 DLP_ERROR_MESSAGE = "Unknown error occurred. Please check the asset configuration and|or action parameters."
 DLP_ERROR_CODE_MESSAGE = "Error code unavailable"
-DLP_UNKNOWN_SEVERITY = 'Unknown severity found. Severity {key} is not defined in custom severity. Hence, we are setting it as medium.'
+DLP_UNKNOWN_SEVERITY = "Unknown severity found. Severity {key} is not defined in custom severity. Hence, we are setting it as medium."
 
-DLP_SEVERITY_DICT = {
-    'low': 'low',
-    'medium': 'medium',
-    'high': 'high'
-}
+DLP_SEVERITY_DICT = {"low": "low", "medium": "medium", "high": "high"}
