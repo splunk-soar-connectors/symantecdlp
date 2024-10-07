@@ -1002,45 +1002,5 @@
             "output": [],
             "versions": "EQ(*)"
         }
-    ],
-    "pip39_dependencies": {
-        "wheel": [
-            {
-                "module": "attrs",
-                "input_file": "wheels/py3/attrs-23.2.0-py3-none-any.whl"
-            },
-            {
-                "module": "isodate",
-                "input_file": "wheels/shared/isodate-0.6.1-py2.py3-none-any.whl"
-            },
-            {
-                "module": "lxml",
-                "input_file": "wheels/py39/lxml-5.2.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
-            },
-            {
-                "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-4.2.2-py3-none-any.whl"
-            },
-            {
-                "module": "python_magic",
-                "input_file": "wheels/shared/python_magic-0.4.24-py2.py3-none-any.whl"
-            },
-            {
-                "module": "pytz",
-                "input_file": "wheels/shared/pytz-2023.3-py2.py3-none-any.whl"
-            },
-            {
-                "module": "requests_file",
-                "input_file": "wheels/shared/requests_file-2.1.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "requests_toolbelt",
-                "input_file": "wheels/shared/requests_toolbelt-1.0.0-py2.py3-none-any.whl"
-            },
-            {
-                "module": "zeep",
-                "input_file": "wheels/py3/zeep-4.2.1-py3-none-any.whl"
-            }
-        ]
-    }
+    ]
 }
