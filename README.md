@@ -6,7 +6,7 @@ Connector Version: 2.2.1
 Product Vendor: Symantec  
 Product Name: Symantec DLP  
 Product Version Supported (regex): ".\*"  
-Minimum Product Version: 6.2.1  
+Minimum Product Version: 6.3.0  
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
 
@@ -73,8 +73,8 @@ default ports used by Splunk SOAR.
 |         https        | tcp                | 443  |
 
 
-### Configuration Variables
-The below configuration variables are required for this Connector to operate.  These variables are specified when configuring a Symantec DLP asset in SOAR.
+### Configuration variables
+This table lists the configuration variables required to operate Symantec Data Loss Prevention. These variables are specified when configuring a Symantec DLP asset in Splunk SOAR.
 
 VARIABLE | REQUIRED | TYPE | DESCRIPTION
 -------- | -------- | ---- | -----------

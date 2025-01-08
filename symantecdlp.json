@@ -12,11 +12,11 @@
     "product_name": "Symantec DLP",
     "product_version_regex": ".*",
     "fips_compliant": true,
-    "min_phantom_version": "6.2.1",
+    "min_phantom_version": "6.3.0",
     "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) 2018-2024 Splunk Inc.",
+    "license": "Copyright (c) 2018-2025 Splunk Inc.",
     "latest_tested_versions": [
         "Symantec DLP version 15.8"
     ],
