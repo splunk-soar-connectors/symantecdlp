@@ -5,18 +5,18 @@
     "publisher": "Splunk",
     "type": "endpoint",
     "main_module": "symantecdlp_connector.py",
-    "app_version": "2.2.0",
-    "utctime_updated": "2022-02-04T16:40:17.000000Z",
+    "app_version": "2.2.1",
+    "utctime_updated": "2024-10-07T08:55:09.000000Z",
     "package_name": "phantom_symantecdlp",
     "product_vendor": "Symantec",
     "product_name": "Symantec DLP",
     "product_version_regex": ".*",
     "fips_compliant": true,
-    "min_phantom_version": "6.2.1",
+    "min_phantom_version": "6.3.0",
     "python_version": "3",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) 2018-2024 Splunk Inc.",
+    "license": "Copyright (c) 2018-2025 Splunk Inc.",
     "latest_tested_versions": [
         "Symantec DLP version 15.8"
     ],
@@ -1007,7 +1007,7 @@
         "wheel": [
             {
                 "module": "attrs",
-                "input_file": "wheels/py3/attrs-23.2.0-py3-none-any.whl"
+                "input_file": "wheels/py3/attrs-24.2.0-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1015,11 +1015,11 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py39/lxml-5.2.2-cp39-cp39-manylinux2014_x86_64.manylinux_2_17_x86_64.whl"
+                "input_file": "wheels/py39/lxml-5.3.0-cp39-cp39-manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-4.2.2-py3-none-any.whl"
+                "input_file": "wheels/py3/platformdirs-4.3.6-py3-none-any.whl"
             },
             {
                 "module": "python_magic",
