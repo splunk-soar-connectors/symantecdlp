@@ -76,7 +76,6 @@ MAGIC_FORMATS = [
 
 
 class SymantecDLPConnector(BaseConnector):
-
     ACTION_ID_TEST_CONNECTIVITY = "test_connectivity"
     ACTION_ID_UPDATE_INCIDENT = "update_incident"
     ACTION_ID_LIST_INCIDENTS = "list_incidents"
@@ -84,9 +83,8 @@ class SymantecDLPConnector(BaseConnector):
     ACTION_ID_ON_POLL = "on_poll"
 
     def __init__(self):
-
         # Call the BaseConnectors init first
-        super(SymantecDLPConnector, self).__init__()
+        super().__init__()
 
         self._base_url = None
         self._session = None
@@ -100,7 +98,6 @@ class SymantecDLPConnector(BaseConnector):
         self._state = {}
 
     def initialize(self):
-
         config = self.get_config()
         self._state = self.load_state()
         self._verify = config[DLP_JSON_VERIFY_SERVER_CERT]
@@ -122,7 +119,7 @@ class SymantecDLPConnector(BaseConnector):
         if self._max_containers is None:
             return self.get_status()
 
-        self._base_url = "{0}/ProtectManager/services/v2011/incidents?wsdl".format(config[DLP_JSON_URL].strip("/"))
+        self._base_url = "{}/ProtectManager/services/v2011/incidents?wsdl".format(config[DLP_JSON_URL].strip("/"))
         self._proxy = {}
         env_vars = config.get("_reserved_environment_variables", {})
         if "HTTP_PROXY" in env_vars:
@@ -143,7 +140,6 @@ class SymantecDLPConnector(BaseConnector):
         return phantom.APP_SUCCESS
 
     def _create_client(self, action_result):
-
         try:
             if not self._verify:
                 self._session.verify = False
@@ -158,7 +154,7 @@ class SymantecDLPConnector(BaseConnector):
 
         except Exception as e:
             return action_result.set_status(
-                phantom.APP_ERROR, "Could not connect to the DLP API endpoint : {}".format(self._get_error_message_from_exception(e))
+                phantom.APP_ERROR, f"Could not connect to the DLP API endpoint : {self._get_error_message_from_exception(e)}"
             )
 
     def _validate_integers(self, action_result, parameter, key, allow_zero=False):
@@ -177,15 +173,15 @@ class SymantecDLPConnector(BaseConnector):
                 parameter = int(parameter)
 
             except Exception as e:
-                self.debug_print("Exception occurred in _validate_integers: {}".format(self._get_error_message_from_exception(e)))
+                self.debug_print(f"Exception occurred in _validate_integers: {self._get_error_message_from_exception(e)}")
                 action_result.set_status(phantom.APP_ERROR, DLP_VALIDATE_INTEGER_MESSAGE.format(key=key))
                 return None
 
             if parameter < 0:
-                action_result.set_status(phantom.APP_ERROR, "Please provide a valid non-negative integer value in the {} parameter".format(key))
+                action_result.set_status(phantom.APP_ERROR, f"Please provide a valid non-negative integer value in the {key} parameter")
                 return None
             if not allow_zero and parameter == 0:
-                action_result.set_status(phantom.APP_ERROR, "Please provide non-zero positive integer in {} parameter".format(key))
+                action_result.set_status(phantom.APP_ERROR, f"Please provide non-zero positive integer in {key} parameter")
                 return None
 
         return parameter
@@ -209,15 +205,13 @@ class SymantecDLPConnector(BaseConnector):
         except:
             pass
 
-        return "Error Code: {0}. Error Message: {1}".format(error_code, error_message)
+        return f"Error Code: {error_code}. Error Message: {error_message}"
 
     def _cleanse_key_names(self, input_dict):
-
         if not input_dict:
             return input_dict
 
         for k in list(input_dict.keys()):
-
             new_k = k
             v = input_dict[k]
 
@@ -251,15 +245,15 @@ class SymantecDLPConnector(BaseConnector):
             _ = self._client.service.incidentList(self._report_id, "0001-01-01T00:00:00")
         except Exception as e:
             error_message = self._get_error_message_from_exception(e)
-            self.debug_print("Error occurred in test connectivity: {}".format(error_message))
-            return action_result.set_status(phantom.APP_ERROR, "Test Connectivity Failed: {}".format(error_message))
+            self.debug_print(f"Error occurred in test connectivity: {error_message}")
+            return action_result.set_status(phantom.APP_ERROR, f"Test Connectivity Failed: {error_message}")
 
         self.save_progress("Test Connectivity Successful")
 
         return action_result.set_status(phantom.APP_SUCCESS, "Test Connectivity Successful")
 
     def _handle_update_incident(self, param):
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
@@ -307,7 +301,7 @@ class SymantecDLPConnector(BaseConnector):
                 custom_fields = json.loads(custom_fields)
             except Exception as e:
                 return action_result.set_status(
-                    phantom.APP_ERROR, "custom_fields must be a JSON string.\r\nError: {}".format(self._get_error_message_from_exception(e))
+                    phantom.APP_ERROR, f"custom_fields must be a JSON string.\r\nError: {self._get_error_message_from_exception(e)}"
                 )
 
             custom_fields = [{"name": key, "value": value} for key, value in list(custom_fields.items())]
@@ -322,7 +316,7 @@ class SymantecDLPConnector(BaseConnector):
         try:
             response = self._client.service.updateIncidents(update_request)
         except Exception as e:
-            return action_result.set_status(phantom.APP_ERROR, "SOAP call to DLP failed : {}".format(self._get_error_message_from_exception(e)))
+            return action_result.set_status(phantom.APP_ERROR, f"SOAP call to DLP failed : {self._get_error_message_from_exception(e)}")
 
         if not response:
             return action_result.set_status(phantom.APP_ERROR, "Response was empty")
@@ -338,7 +332,7 @@ class SymantecDLPConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS, "Successfully updated incident")
 
     def _handle_list_incidents(self, param):
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
@@ -361,8 +355,8 @@ class SymantecDLPConnector(BaseConnector):
         try:
             response = self._client.service.incidentList(report_id, creation_time_after)
         except Exception as e:
-            message = "SOAP call to DLP failed. {}".format(self._get_error_message_from_exception(e))
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "Error Occurred: {}".format(message)))
+            message = f"SOAP call to DLP failed. {self._get_error_message_from_exception(e)}"
+            return RetVal(action_result.set_status(phantom.APP_ERROR, f"Error Occurred: {message}"))
 
         resp_dict = self._zeep_to_dict(response)
         incident_ids = resp_dict.get("incidentLongId")
@@ -400,8 +394,7 @@ class SymantecDLPConnector(BaseConnector):
         return phantom.APP_ERROR
 
     def _handle_get_incident(self, param):
-
-        self.save_progress("In action handler for: {0}".format(self.get_action_identifier()))
+        self.save_progress(f"In action handler for: {self.get_action_identifier()}")
 
         action_result = self.add_action_result(ActionResult(dict(param)))
 
@@ -449,12 +442,11 @@ class SymantecDLPConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS, message)
 
     def _get_incident_ids(self, action_result, report_id, date_string):
-
         try:
             response = self._client.service.incidentList(report_id, date_string)
         except Exception as e:
-            message = "SOAP call to DLP failed. {}".format(self._get_error_message_from_exception(e))
-            return RetVal(action_result.set_status(phantom.APP_ERROR, "On poll Failed: {}".format(message)))
+            message = f"SOAP call to DLP failed. {self._get_error_message_from_exception(e)}"
+            return RetVal(action_result.set_status(phantom.APP_ERROR, f"On poll Failed: {message}"))
 
         resp_dict = self._zeep_to_dict(response)
 
@@ -479,7 +471,6 @@ class SymantecDLPConnector(BaseConnector):
         return response
 
     def _get_incident_details(self, action_result, incident_id, incident_long_id, extract_files, includeViolations, includeHistory):
-
         binary_incident_id = incident_id
         kwargs = dict()
         if incident_long_id is not None:
@@ -490,7 +481,7 @@ class SymantecDLPConnector(BaseConnector):
         try:
             response = self._client.service.incidentDetail(includeViolations=includeViolations, includeHistory=includeHistory, **kwargs)
         except Exception as e:
-            message = "SOAP call to DLP failed. {}".format(self._get_error_message_from_exception(e))
+            message = f"SOAP call to DLP failed. {self._get_error_message_from_exception(e)}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, message))
 
         if not response:
@@ -502,9 +493,7 @@ class SymantecDLPConnector(BaseConnector):
             incident_details = resp_dict[0]
         except Exception as e:
             return RetVal(
-                action_result.set_status(
-                    phantom.APP_ERROR, "Could not get incident details: {0}".format(self._get_error_message_from_exception(e))
-                )
+                action_result.set_status(phantom.APP_ERROR, f"Could not get incident details: {self._get_error_message_from_exception(e)}")
             )
 
         if not incident_details:
@@ -519,7 +508,7 @@ class SymantecDLPConnector(BaseConnector):
         try:
             response = self._client.service.incidentBinaries(binary_incident_id, False, True)
         except Exception as e:
-            message = "SOAP call to DLP failed. {}".format(self._get_error_message_from_exception(e))
+            message = f"SOAP call to DLP failed. {self._get_error_message_from_exception(e)}"
             return RetVal(action_result.set_status(phantom.APP_ERROR, message))
 
         if not response:
@@ -533,7 +522,6 @@ class SymantecDLPConnector(BaseConnector):
         return RetVal(phantom.APP_SUCCESS, incident_details)
 
     def _get_file_contains(self, file_path):
-
         contains = []
         ext = os.path.splitext(file_path)[1]
         contains.extend(FILE_EXTENSIONS.get(ext, []))
@@ -545,7 +533,6 @@ class SymantecDLPConnector(BaseConnector):
         return contains
 
     def _handle_file(self, curr_file, vault_ids, container_id, container_severity, artifact_id, is_last):
-
         file_name = curr_file.get("file_name")
 
         local_file_path = curr_file["file_path"]
@@ -558,7 +545,7 @@ class SymantecDLPConnector(BaseConnector):
         if not file_name:
             file_name = os.path.basename(local_file_path)
 
-        self.debug_print("Vault file name: {0}".format(file_name))
+        self.debug_print(f"Vault file name: {file_name}")
 
         vault_attach_dict[phantom.APP_JSON_ACTION_NAME] = self.get_action_name()
         vault_attach_dict[phantom.APP_JSON_APP_RUN_ID] = self.get_app_run_id()
@@ -572,7 +559,7 @@ class SymantecDLPConnector(BaseConnector):
             return phantom.APP_ERROR, phantom.APP_ERROR
 
         if not success:
-            self.debug_print("Failed to add file to Vault: {0}".format(message))
+            self.debug_print(f"Failed to add file to Vault: {message}")
             return phantom.APP_ERROR, phantom.APP_ERROR
 
         # add the vault id artifact to the container
@@ -598,12 +585,11 @@ class SymantecDLPConnector(BaseConnector):
             artifact["run_automation"] = True
 
         ret_val, status_string, artifact_id = self.save_artifact(artifact)
-        self.debug_print("save_artifact returns, value: {0}, reason: {1}, id: {2}".format(ret_val, status_string, artifact_id))
+        self.debug_print(f"save_artifact returns, value: {ret_val}, reason: {status_string}, id: {artifact_id}")
 
         return phantom.APP_SUCCESS, ret_val
 
     def _set_sdi(self, default_id, input_dict):
-
         if "source_data_identifier" in input_dict:
             del input_dict["source_data_identifier"]
 
@@ -625,7 +611,6 @@ class SymantecDLPConnector(BaseConnector):
         return fips_enabled
 
     def _create_dict_hash(self, input_dict):
-
         input_dict_str = None
 
         if not input_dict:
@@ -650,7 +635,6 @@ class SymantecDLPConnector(BaseConnector):
         return dict_hash.hexdigest()
 
     def _parse_results(self, action_result, param, results):
-
         container_count = self._max_containers
 
         if param:
@@ -659,7 +643,6 @@ class SymantecDLPConnector(BaseConnector):
         results = results[:container_count]
 
         for i, result in enumerate(results):
-
             container = result.get("container")
             files = result.get("files", [])
 
@@ -671,7 +654,6 @@ class SymantecDLPConnector(BaseConnector):
             len_artifacts = len(artifacts)
 
             for j, artifact in enumerate(artifacts):
-
                 if not artifact:
                     continue
 
@@ -682,14 +664,14 @@ class SymantecDLPConnector(BaseConnector):
                     # mark it such that active playbooks get executed
                     artifact["run_automation"] = True
 
-            self.send_progress("Saving Container # {0}".format(i + 1))
+            self.send_progress(f"Saving Container # {i + 1}")
 
             try:
                 container = self._sanitize_dict(container)
                 ret_val, message, container_id = self.save_container(container)
 
                 if phantom.is_fail(ret_val):
-                    message = "Failed to add Container for id: {0}, error msg: {1}".format(container["source_data_identifier"], message)
+                    message = "Failed to add Container for id: {}, error msg: {}".format(container["source_data_identifier"], message)
                     self.debug_print(message)
                     continue
 
@@ -705,15 +687,15 @@ class SymantecDLPConnector(BaseConnector):
                     ret_val, artifact_message, ids = self.save_artifacts(artifacts)
 
                     if phantom.is_fail(ret_val):
-                        message = "Failed to add Artifact for container_id: {0}, error msg: {1}".format(container_id, artifact_message)
+                        message = f"Failed to add Artifact for container_id: {container_id}, error msg: {artifact_message}"
                         self.debug_print(message)
                         continue
 
             except Exception as e:
-                self.debug_print("Handled Exception while saving container: {}".format(self._get_error_message_from_exception(e)))
+                self.debug_print(f"Handled Exception while saving container: {self._get_error_message_from_exception(e)}")
                 continue
 
-            self.debug_print("save_container returns, value: {0}, reason: {1}, id: {2}".format(ret_val, message, container_id))
+            self.debug_print(f"save_container returns, value: {ret_val}, reason: {message}, id: {container_id}")
 
             vault_ids = list()
             len_files = len(files)
@@ -728,7 +710,6 @@ class SymantecDLPConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def _get_time_string(self):
-
         # function to separate on poll and poll now
         config = self.get_config()
         last_time = self._state.get(DLP_JSON_LAST_DATE_TIME)
@@ -739,7 +720,7 @@ class SymantecDLPConnector(BaseConnector):
             self._state["first_run"] = False
             dt_diff = datetime.utcnow() - timedelta(days=self._schedule_poll_days)
         elif last_time:
-            return "{0}:{1}".format(last_time[:-2], last_time[-2:])
+            return f"{last_time[:-2]}:{last_time[-2:]}"
         else:
             dt_diff = datetime.utcnow() - timedelta(days=self._schedule_poll_days)
 
@@ -754,10 +735,9 @@ class SymantecDLPConnector(BaseConnector):
         time_str = to_dt.strftime(DLP_TIME_FORMAT)
 
         # DLP is weird and wants a colon in the timezone value
-        return "{0}:{1}".format(time_str[:-2], time_str[-2:])
+        return f"{time_str[:-2]}:{time_str[-2:]}"
 
     def _on_poll(self, param):
-
         action_result = self.add_action_result(ActionResult(param))
 
         ret_val = self._create_client(action_result)
@@ -774,7 +754,7 @@ class SymantecDLPConnector(BaseConnector):
                 }
             except Exception as e:
                 error_message = self._get_error_message_from_exception(e)
-                self.debug_print("Error occurred while loading the json: {}".format(error_message))
+                self.debug_print(f"Error occurred while loading the json: {error_message}")
                 return action_result.set_status(phantom.APP_ERROR, "Please provide a valid JSON in custom severity parameter")
 
             self._severity.update(self._custom_severity)
@@ -788,7 +768,7 @@ class SymantecDLPConnector(BaseConnector):
 
         time_string = self._get_time_string()
 
-        self.save_progress("Getting incident IDs generated since {0}".format(time_string))
+        self.save_progress(f"Getting incident IDs generated since {time_string}")
 
         config = self.get_config()
 
@@ -806,7 +786,7 @@ class SymantecDLPConnector(BaseConnector):
 
         incident_len = len(incident_ids)
 
-        self.save_progress("Got {0} incidents".format(incident_len))
+        self.save_progress(f"Got {incident_len} incidents")
 
         incident_count = 0
         queried_incident_details = []
@@ -814,7 +794,6 @@ class SymantecDLPConnector(BaseConnector):
         last_inc_id = self._state.get(DLP_JSON_LAST_INCIDENT_ID, -1)
 
         for curr_incident_id in incident_ids:
-
             ret_val, incident_detail = self._get_incident_details(
                 action_result, curr_incident_id, curr_incident_id, config[DLP_JSON_EXTRACT_COMPONENTS], True, True
             )
@@ -840,14 +819,14 @@ class SymantecDLPConnector(BaseConnector):
         try:
             results = pi.parse_incidents(queried_incident_details, self)
         except Exception as e:
-            self.debug_print("The incidents parser script threw an exception : {}".format(self._get_error_message_from_exception(e)))
+            self.debug_print(f"The incidents parser script threw an exception : {self._get_error_message_from_exception(e)}")
             return action_result.set_status(
                 phantom.APP_ERROR, "The incident parser script ran into an error, please see the logs for the complete stack trace"
             )
 
         no_of_containers = len(results)
 
-        self.save_progress("Parsed incidents into {0} containers".format(no_of_containers))
+        self.save_progress(f"Parsed incidents into {no_of_containers} containers")
 
         self._parse_results(action_result, param, results)
 
@@ -857,7 +836,6 @@ class SymantecDLPConnector(BaseConnector):
         return action_result.set_status(phantom.APP_SUCCESS)
 
     def handle_action(self, param):
-
         action = self.get_action_identifier()
         ret_val = phantom.APP_SUCCESS
 
@@ -876,7 +854,6 @@ class SymantecDLPConnector(BaseConnector):
 
 
 if __name__ == "__main__":
-
     # import pudb
     import argparse
     import sys
@@ -898,7 +875,6 @@ if __name__ == "__main__":
     verify = args.verify
 
     if username is not None and password is None:
-
         # User specified a username but not a password, so ask
         import getpass
 
@@ -907,7 +883,7 @@ if __name__ == "__main__":
     if username and password:
         try:
             print("Accessing the Login page")
-            login_url = "{}login".format(BaseConnector._get_phantom_base_url())
+            login_url = f"{BaseConnector._get_phantom_base_url()}login"
             r = requests.get(login_url, verify=verify, timeout=60)
             csrftoken = r.cookies["csrftoken"]
 
@@ -917,14 +893,14 @@ if __name__ == "__main__":
             data["csrfmiddlewaretoken"] = csrftoken
 
             headers = dict()
-            headers["Cookie"] = "csrftoken={}".format(csrftoken)
+            headers["Cookie"] = f"csrftoken={csrftoken}"
             headers["Referer"] = login_url
 
             print("Logging into Platform to get the session id")
             r2 = requests.post(login_url, verify=verify, data=data, headers=headers, timeout=60)
             session_id = r2.cookies["sessionid"]
         except Exception as e:
-            print("Unable to get session id from the platfrom. Error: {}".format(str(e)))
+            print(f"Unable to get session id from the platfrom. Error: {e!s}")
             sys.exit(1)
 
     if len(sys.argv) < 2:
