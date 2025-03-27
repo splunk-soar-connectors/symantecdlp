@@ -1,33 +1,74 @@
 Splunk SOAR Symantec Data Loss Prevention
-Copyright (c) 2018-2022 Splunk Inc.
+Copyright (c) 2018-2025 Splunk Inc.
 
-Third-party Software Attributions:
+Third Party Software Attributions:
 
-Library: beautifulsoup4
-Version: 4.9.1
+Name: attrs
+Version: 25.3.0
+Author:
+License:
+
+Name: certifi
+Version: 2025.1.31
+Author: Kenneth Reitz
+License: MPL-2.0
+
+Name: charset-normalizer
+Version: 3.4.1
+Author:
 License: MIT
-Copyright 2004-2017 Leonard Richardson
-Copyright 2004-2019 Leonard Richardson
-Copyright 2018 Isaac Muse
 
-Library: python-magic
-Version: 0.4.18
+Name: idna
+Version: 3.10
+Author:
+License:
+
+Name: isodate
+Version: 0.7.2
+Author: Gerhard Weis
+License: Copyright (c) 2021, Hugo van Kemenade and contributors
+
+Name: lxml
+Version: 5.3.1
+Author: lxml dev team
+License: BSD-3-Clause
+
+Name: platformdirs
+Version: 4.3.7
+Author:
+License:
+
+Name: python-magic
+Version: 0.4.24
+Author: Adam Hupp
 License: MIT
-Copyright 2001-2014 Adam Hupp
 
-Library: pytz
-Version: 2021.1
+Name: pytz
+Version: 2023.3
+Author: Stuart Bishop
 License: MIT
-License: Zope
-Copyright 1987-2006 implementation only works for dates between
-Copyright 2003-2019 Stuart Bishop <stuart@stuartbishop.net>
 
-Library: requests
-Version: 2.25.0
+Name: requests
+Version: 2.32.3
+Author: Kenneth Reitz
+License: Apache-2.0
+
+Name: requests-file
+Version: 2.1.0
+Author:
 License: Apache 2.0
-Kenneth Reitz
 
-Library: zeep
-Version: 3.4.0
+Name: requests-toolbelt
+Version: 1.0.0
+Author: Ian Cordasco, Cory Benfield
+License: Apache 2.0
+
+Name: urllib3
+Version: 2.3.0
+Author:
+License:
+
+Name: zeep
+Version: 4.2.1
+Author: Michael van Tellingen
 License: MIT
-Unknown copyright
