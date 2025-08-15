@@ -1,9 +1,9 @@
 # Symantec Data Loss Prevention
 
-Publisher: Splunk \
-Connector Version: 2.2.1 \
-Product Vendor: Symantec \
-Product Name: Symantec DLP \
+Publisher: Splunk <br>
+Connector Version: 2.2.1 <br>
+Product Vendor: Symantec <br>
+Product Name: Symantec DLP <br>
 Minimum Product Version: 6.3.0
 
 This app supports incident update and incident ingestion from Symantec Data Loss Prevention installation
@@ -76,17 +76,17 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 
 ### Supported Actions
 
-[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity \
-[update incident](#action-update-incident) - Update a DLP incident \
-[list incidents](#action-list-incidents) - List DLP incidents \
-[get incident](#action-get-incident) - Get DLP incident \
+[test connectivity](#action-test-connectivity) - Validate the asset configuration for connectivity <br>
+[update incident](#action-update-incident) - Update a DLP incident <br>
+[list incidents](#action-list-incidents) - List DLP incidents <br>
+[get incident](#action-get-incident) - Get DLP incident <br>
 [on poll](#action-on-poll) - Action handler for the ingest functionality
 
 ## action: 'test connectivity'
 
 Validate the asset configuration for connectivity
 
-Type: **test** \
+Type: **test** <br>
 Read only: **True**
 
 #### Action Parameters
@@ -101,7 +101,7 @@ No Output
 
 Update a DLP incident
 
-Type: **generic** \
+Type: **generic** <br>
 Read only: **False**
 
 For custom attributes defined in the administration console of DLP, use the custom_fields parameter. The parameter must be a JSON string with the key being the name of the attribute and the value being the value of the attribute.
@@ -141,7 +141,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 List DLP incidents
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 <b>creation_time</b> parameter is used to fetch the incidents that were created after the creation time.<br>The timestamp should be entered in <b>YYYY-MM-DD</b> or a valid &quotISO 8601 timestamp&quot format.<br>Some examples of valid time formats are:<ul><li>2018-09-24</li><li>2018-09-23T14:40:44Z</li><li>2018-09-23T14:40:44+05:30</li><li>2020-08-30T01:45:36.123Z</li><li>2021-12-13T21:20:37.593194+05:30</li></ul><br><b>report_id</b> specifies the ID of the saved report to execute on the Enforce Server from which we want to fetch incident.
@@ -171,7 +171,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Get DLP incident
 
-Type: **investigate** \
+Type: **investigate** <br>
 Read only: **True**
 
 User needs to provide value for either <b>incident_id</b> or <b>incident_long_id</b> to get the incident details. It is recommended to use <b>incident_long_id</b> parameter to fetch incident details.
@@ -275,7 +275,7 @@ summary.total_objects_successful | numeric | | 1 |
 
 Action handler for the ingest functionality
 
-Type: **ingest** \
+Type: **ingest** <br>
 Read only: **True**
 
 #### Action Parameters
