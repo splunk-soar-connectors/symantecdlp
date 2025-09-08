@@ -1015,11 +1015,11 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py39/lxml-6.0.0-cp39-cp39-manylinux_2_26_x86_64.manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py39/lxml-6.0.1-cp39-cp39-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-4.3.8-py3-none-any.whl"
+                "input_file": "wheels/py3/platformdirs-4.4.0-py3-none-any.whl"
             },
             {
                 "module": "pytz",
@@ -1051,11 +1051,11 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py313/lxml-6.0.0-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py313/lxml-6.0.1-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-4.3.8-py3-none-any.whl"
+                "input_file": "wheels/py3/platformdirs-4.4.0-py3-none-any.whl"
             },
             {
                 "module": "pytz",
