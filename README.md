@@ -1,7 +1,7 @@
 # Symantec Data Loss Prevention
 
 Publisher: Splunk <br>
-Connector Version: 2.2.1 <br>
+Connector Version: 2.2.2 <br>
 Product Vendor: Symantec <br>
 Product Name: Symantec DLP <br>
 Minimum Product Version: 6.3.0
