@@ -31,7 +31,7 @@
             "data_type": "boolean",
             "description": "Verify server certificate",
             "order": 1,
-            "default": false
+            "default": true
         },
         "username": {
             "description": "Username",
