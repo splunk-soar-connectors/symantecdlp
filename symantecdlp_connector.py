@@ -636,6 +636,7 @@ class SymantecDLPConnector(BaseConnector):
 
     def _parse_results(self, action_result, param, results):
         container_count = self._max_containers
+        failed_incidents = 0
 
         if param:
             container_count = param.get(phantom.APP_JSON_CONTAINER_COUNT, self._max_containers)
@@ -648,6 +649,7 @@ class SymantecDLPConnector(BaseConnector):
 
             if not container:
                 self.save_progress("no container")
+                failed_incidents += 1
                 continue
 
             artifacts = container.pop("artifacts", [])
@@ -673,11 +675,13 @@ class SymantecDLPConnector(BaseConnector):
                 if phantom.is_fail(ret_val):
                     message = "Failed to add Container for id: {}, error msg: {}".format(container["source_data_identifier"], message)
                     self.debug_print(message)
+                    failed_incidents += 1
                     continue
 
                 if not container_id:
                     message = "save_container did not return a container_id"
                     self.debug_print(message)
+                    failed_incidents += 1
                     continue
 
                 for artifact in artifacts:
@@ -689,10 +693,12 @@ class SymantecDLPConnector(BaseConnector):
                     if phantom.is_fail(ret_val):
                         message = f"Failed to add Artifact for container_id: {container_id}, error msg: {artifact_message}"
                         self.debug_print(message)
+                        failed_incidents += 1
                         continue
 
             except Exception as e:
                 self.debug_print(f"Handled Exception while saving container: {self._get_error_message_from_exception(e)}")
+                failed_incidents += 1
                 continue
 
             self.debug_print(f"save_container returns, value: {ret_val}, reason: {message}, id: {container_id}")
@@ -707,7 +713,7 @@ class SymantecDLPConnector(BaseConnector):
                     curr_file, vault_ids, container_id, container_severity, count, count == len_artifacts + len_files
                 )
 
-        return action_result.set_status(phantom.APP_SUCCESS)
+        return failed_incidents
 
     def _get_time_string(self):
         # function to separate on poll and poll now
@@ -813,8 +819,8 @@ class SymantecDLPConnector(BaseConnector):
                 break
 
         if not self.is_poll_now():
-            self._state[DLP_JSON_LAST_DATE_TIME] = incident_detail["incident"]["incidentCreationDate"]
-            self._state[DLP_JSON_LAST_INCIDENT_ID] = int(incident_detail["incident"]["incidentId"])
+            candidate_last_date_time = incident_detail["incident"]["incidentCreationDate"]
+            candidate_last_incident_id = int(incident_detail["incident"]["incidentId"])
 
         try:
             results = pi.parse_incidents(queried_incident_details, self)
@@ -828,7 +834,16 @@ class SymantecDLPConnector(BaseConnector):
 
         self.save_progress(f"Parsed incidents into {no_of_containers} containers")
 
-        self._parse_results(action_result, param, results)
+        failed_incidents = self._parse_results(action_result, param, results)
+
+        if failed_incidents:
+            return action_result.set_status(
+                phantom.APP_ERROR, f"{failed_incidents} incident(s) failed to ingest; checkpoint not advanced"
+            )
+
+        if not self.is_poll_now():
+            self._state[DLP_JSON_LAST_DATE_TIME] = candidate_last_date_time
+            self._state[DLP_JSON_LAST_INCIDENT_ID] = candidate_last_incident_id
 
         # blank line to update the last status message
         self.send_progress("")
