@@ -707,10 +707,28 @@ class SymantecDLPConnector(BaseConnector):
             len_files = len(files)
             count = len_artifacts
             container_severity = container.get("severity", "medium")
+            trigger_saved = False
             for curr_file in files:
                 count += 1
+                is_last = count == len_artifacts + len_files
                 ret_val, added_to_vault = self._handle_file(
-                    curr_file, vault_ids, container_id, container_severity, count, count == len_artifacts + len_files
+                    curr_file, vault_ids, container_id, container_severity, count, is_last
+                )
+                if is_last and not phantom.is_fail(ret_val) and not phantom.is_fail(added_to_vault):
+                    trigger_saved = True
+
+            if files and not trigger_saved:
+                artifact = {}
+                artifact.update(pi.artifact_common)
+                artifact["container_id"] = container_id
+                artifact["severity"] = container_severity
+                artifact["name"] = "Ingest Automation Trigger"
+                artifact["cef"] = {"incidentId": container["source_data_identifier"]}
+                self._set_sdi(count + 1, artifact)
+                artifact["run_automation"] = True
+                ret_val, status_string, artifact_id = self.save_artifact(artifact)
+                self.debug_print(
+                    f"fallback trigger save_artifact returns, value: {ret_val}, reason: {status_string}, id: {artifact_id}"
                 )
 
         return failed_incidents
