@@ -1,6 +1,6 @@
 # File: symantecdlp_connector.py
 #
-# Copyright (c) 2018-2025 Splunk Inc.
+# Copyright (c) 2018-2026 Splunk Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -711,9 +711,7 @@ class SymantecDLPConnector(BaseConnector):
             for curr_file in files:
                 count += 1
                 is_last = count == len_artifacts + len_files
-                ret_val, added_to_vault = self._handle_file(
-                    curr_file, vault_ids, container_id, container_severity, count, is_last
-                )
+                ret_val, added_to_vault = self._handle_file(curr_file, vault_ids, container_id, container_severity, count, is_last)
                 if is_last and not phantom.is_fail(ret_val) and not phantom.is_fail(added_to_vault):
                     trigger_saved = True
 
@@ -727,9 +725,7 @@ class SymantecDLPConnector(BaseConnector):
                 self._set_sdi(count + 1, artifact)
                 artifact["run_automation"] = True
                 ret_val, status_string, artifact_id = self.save_artifact(artifact)
-                self.debug_print(
-                    f"fallback trigger save_artifact returns, value: {ret_val}, reason: {status_string}, id: {artifact_id}"
-                )
+                self.debug_print(f"fallback trigger save_artifact returns, value: {ret_val}, reason: {status_string}, id: {artifact_id}")
 
         return failed_incidents
 
@@ -855,9 +851,7 @@ class SymantecDLPConnector(BaseConnector):
         failed_incidents = self._parse_results(action_result, param, results)
 
         if failed_incidents:
-            return action_result.set_status(
-                phantom.APP_ERROR, f"{failed_incidents} incident(s) failed to ingest; checkpoint not advanced"
-            )
+            return action_result.set_status(phantom.APP_ERROR, f"{failed_incidents} incident(s) failed to ingest; checkpoint not advanced")
 
         if not self.is_poll_now():
             self._state[DLP_JSON_LAST_DATE_TIME] = candidate_last_date_time

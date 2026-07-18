@@ -16,7 +16,7 @@
     "python_version": "3.9, 3.13",
     "logo": "logo_symantec.svg",
     "logo_dark": "logo_symantec_dark.svg",
-    "license": "Copyright (c) 2018-2025 Splunk Inc.",
+    "license": "Copyright (c) 2018-2026 Splunk Inc.",
     "latest_tested_versions": [
         "Symantec DLP version 15.8"
     ],
@@ -1007,7 +1007,7 @@
         "wheel": [
             {
                 "module": "attrs",
-                "input_file": "wheels/py3/attrs-25.3.0-py3-none-any.whl"
+                "input_file": "wheels/py3/attrs-26.1.0-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1015,7 +1015,7 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py39/lxml-6.0.1-cp39-cp39-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py39/lxml-6.1.1-cp39-cp39-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "platformdirs",
@@ -1023,11 +1023,11 @@
             },
             {
                 "module": "pytz",
-                "input_file": "wheels/shared/pytz-2025.2-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pytz-2026.2-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_file",
-                "input_file": "wheels/shared/requests_file-2.1.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests_file-3.0.1-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_toolbelt",
@@ -1043,7 +1043,7 @@
         "wheel": [
             {
                 "module": "attrs",
-                "input_file": "wheels/py3/attrs-25.3.0-py3-none-any.whl"
+                "input_file": "wheels/py3/attrs-26.1.0-py3-none-any.whl"
             },
             {
                 "module": "isodate",
@@ -1051,19 +1051,19 @@
             },
             {
                 "module": "lxml",
-                "input_file": "wheels/py313/lxml-6.0.1-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
+                "input_file": "wheels/py313/lxml-6.1.1-cp313-cp313-manylinux_2_26_x86_64.manylinux_2_28_x86_64.whl"
             },
             {
                 "module": "platformdirs",
-                "input_file": "wheels/py3/platformdirs-4.4.0-py3-none-any.whl"
+                "input_file": "wheels/py3/platformdirs-4.10.1-py3-none-any.whl"
             },
             {
                 "module": "pytz",
-                "input_file": "wheels/shared/pytz-2025.2-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/pytz-2026.2-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_file",
-                "input_file": "wheels/shared/requests_file-2.1.0-py2.py3-none-any.whl"
+                "input_file": "wheels/shared/requests_file-3.0.1-py2.py3-none-any.whl"
             },
             {
                 "module": "requests_toolbelt",
