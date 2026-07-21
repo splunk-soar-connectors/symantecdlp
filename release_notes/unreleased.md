@@ -1,3 +1,3 @@
 **Unreleased**
 
-Updated development tooling.
+* Strip Unicode format-control characters from Symantec DLP incident values before creating containers, artifacts, or vault metadata.
