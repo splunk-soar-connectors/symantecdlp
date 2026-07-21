@@ -660,7 +660,7 @@ def parse_incidents(incidents, base_connector):
             if not content:
                 continue
 
-            file_desc, file_path = tempfile.mkstemp(suffix=".comp", prefix="app_dlp", dir="/vault/tmp/")
+            _file_desc, file_path = tempfile.mkstemp(suffix=".comp", prefix="app_dlp", dir="/vault/tmp/")
 
             file_name = component.get("name")
             if not file_name:

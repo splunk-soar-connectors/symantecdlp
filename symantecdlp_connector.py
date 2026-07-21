@@ -19,6 +19,7 @@ import hashlib
 import json
 import os
 import re
+import unicodedata
 import uuid
 from datetime import datetime, timedelta
 
@@ -456,13 +457,13 @@ class SymantecDLPConnector(BaseConnector):
         if isinstance(obj, datetime):
             return obj.strftime(DLP_TIME_FORMAT)
         elif isinstance(obj, str):
-            return obj.replace("\u0000", "")
+            return "".join(character for character in obj if character != "\u0000" and unicodedata.category(character) != "Cf")
         elif isinstance(obj, list):
             return [self._sanitize_dict(item) for item in obj]
         elif isinstance(obj, dict):
             return {k: self._sanitize_dict(v) for k, v in obj.items()}
         elif isinstance(obj, bytes):
-            return UnicodeDammit(obj).unicode_markup
+            return self._sanitize_dict(UnicodeDammit(obj).unicode_markup)
         return obj
 
     def _zeep_to_dict(self, resp):
@@ -688,7 +689,7 @@ class SymantecDLPConnector(BaseConnector):
                     artifact["container_id"] = container_id
                     artifact["severity"] = container.get("severity", "medium")
                 if artifacts:
-                    ret_val, artifact_message, ids = self.save_artifacts(artifacts)
+                    ret_val, artifact_message, _ids = self.save_artifacts(artifacts)
 
                     if phantom.is_fail(ret_val):
                         message = f"Failed to add Artifact for container_id: {container_id}, error msg: {artifact_message}"
