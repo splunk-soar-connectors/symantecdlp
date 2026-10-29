@@ -56,6 +56,29 @@ default ports used by Splunk SOAR.
 |         http | tcp | 80 |
 |         https | tcp | 443 |
 
+## Reusable Sender/Recipient Lists
+
+The **get list** and **update list** actions use the Sender/Recipient Pattern Management
+REST API available in Symantec DLP 16.0 and later. They use the configured device URL,
+username, password, certificate verification, and proxy settings. The configured account
+must have permission to read or modify reusable sender/recipient patterns. These actions
+call `/ProtectManager/webservices/v2/senderRecipientPattern/{list_id}` and do not use the
+incident SOAP service. Test connectivity continues to test the incident SOAP service;
+it does not validate access to this REST API.
+
+The **list_id** parameter must be a positive integer. Use **get list** to retrieve the
+current definition before updating it. The **new_value** parameter is a JSON object
+containing the complete replacement definition. Include the existing user patterns and
+IP addresses that should remain in the list; updating a list can affect policies that use it.
+
+Example **new_value**:
+
+```json
+{"name": "Example list", "description": "Sender patterns", "ruleType": 4, "userPatterns": ["test@example.com"], "ipAddresses": ["192.0.2.1"]}
+```
+
+See the [Broadcom sender/recipient pattern API examples](https://knowledge.broadcom.com/external/article/250998/symantec-dlp-core-api-reusable-senderre.html).
+
 ### Configuration variables
 
 This table lists the configuration variables required to operate Symantec Data Loss Prevention. These variables are specified when configuring a Symantec DLP asset in Splunk SOAR.
@@ -80,6 +103,8 @@ VARIABLE | REQUIRED | TYPE | DESCRIPTION
 [update incident](#action-update-incident) - Update a DLP incident <br>
 [list incidents](#action-list-incidents) - List DLP incidents <br>
 [get incident](#action-get-incident) - Get DLP incident <br>
+[get list](#action-get-list) - Get a reusable sender/recipient list from Symantec DLP <br>
+[update list](#action-update-list) - Update a reusable sender/recipient list in Symantec DLP <br>
 [on poll](#action-on-poll) - Action handler for the ingest functionality
 
 ## action: 'test connectivity'
@@ -268,6 +293,83 @@ action_result.data.\*.incidentType | string | | |
 action_result.data.\*.statusCode | string | | SUCCESS |
 action_result.summary | string | | |
 action_result.message | string | | |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'get list'
+
+Get a reusable sender/recipient list from Symantec DLP
+
+Type: **investigate** <br>
+Read only: **True**
+
+Retrieves a reusable sender/recipient pattern list by ID using the DLP 16.0 or later REST API.
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**list_id** | required | ID of the list to retrieve | numeric | `dlp list id` |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.list_id | numeric | `dlp list id` | 508 |
+action_result.data.\* | string | | |
+action_result.data.\*.id | numeric | `dlp list id` | 508 |
+action_result.data.\*.name | string | | EXAMPLE LIST NAME |
+action_result.data.\*.ruleType | numeric | | 4 |
+action_result.data.\*.modifiedBy.id | numeric | | 504 |
+action_result.data.\*.modifiedBy.name | string | | testuser |
+action_result.data.\*.description | string | | Example List Description |
+action_result.data.\*.modifiedDate | string | | 2026-03-31T11:03:15 |
+action_result.data.\*.userPatterns.\* | string | | test@example.com |
+action_result.summary.list_id | numeric | `dlp list id` | 508 |
+action_result.data.\*.ipAddresses.\* | string | | 192.0.2.1 |
+action_result.summary.list_name | string | | EXAMPLE LIST NAME |
+action_result.summary.total_entries | numeric | | 2 |
+action_result.message | string | | Successfully retrieved list |
+summary.total_objects | numeric | | 1 |
+summary.total_objects_successful | numeric | | 1 |
+
+## action: 'update list'
+
+Update a reusable sender/recipient list in Symantec DLP
+
+Type: **generic** <br>
+Read only: **False**
+
+Replaces a reusable sender/recipient pattern list using the DLP 16.0 or later REST API. The new_value parameter must be a JSON object containing the complete list definition, including name, description, ruleType, userPatterns, and ipAddresses as appropriate. Retrieve the current list first to preserve existing entries.
+
+#### Action Parameters
+
+PARAMETER | REQUIRED | DESCRIPTION | TYPE | CONTAINS
+--------- | -------- | ----------- | ---- | --------
+**list_id** | required | ID of the list to update | numeric | `dlp list id` |
+**new_value** | required | JSON object containing the new data for the list | string | |
+
+#### Action Output
+
+DATA PATH | TYPE | CONTAINS | EXAMPLE VALUES
+--------- | ---- | -------- | --------------
+action_result.status | string | | success failed |
+action_result.parameter.list_id | numeric | `dlp list id` | 508 |
+action_result.parameter.new_value | string | | {"name": "EXAMPLE LIST NAME", "description": "Example List Description", "ruleType": 4, "userPatterns": ["test@example.com", "example@example.com"]} |
+action_result.data.\* | string | | |
+action_result.data.\*.id | numeric | `dlp list id` | 508 |
+action_result.data.\*.name | string | | EXAMPLE LIST NAME |
+action_result.data.\*.ruleType | numeric | | 4 |
+action_result.data.\*.modifiedBy.id | numeric | | 504 |
+action_result.data.\*.modifiedBy.name | string | | testuser |
+action_result.data.\*.description | string | | Example List Description |
+action_result.data.\*.modifiedDate | string | | 2026-03-31T11:31:56 |
+action_result.data.\*.userPatterns.\* | string | | test@example.com |
+action_result.data.\*.ipAddresses.\* | string | | 192.0.2.1 |
+action_result.summary.list_id | numeric | `dlp list id` | 508 |
+action_result.summary.update_status | string | | success |
+action_result.message | string | | Successfully updated list |
 summary.total_objects | numeric | | 1 |
 summary.total_objects_successful | numeric | | 1 |
 

@@ -971,6 +971,354 @@
             "versions": "EQ(*)"
         },
         {
+            "action": "get list",
+            "description": "Get a reusable sender/recipient list from Symantec DLP",
+            "verbose": "Retrieves a reusable sender/recipient pattern list by ID using the DLP 16.0 or later REST API.",
+            "type": "investigate",
+            "identifier": "get_list",
+            "read_only": true,
+            "parameters": {
+                "list_id": {
+                    "description": "ID of the list to retrieve",
+                    "data_type": "numeric",
+                    "order": 0,
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "dlp list id"
+                    ]
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.list_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        508
+                    ],
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        508
+                    ],
+                    "column_name": "List ID",
+                    "column_order": 0,
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "EXAMPLE LIST NAME"
+                    ],
+                    "column_name": "Name",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.ruleType",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ],
+                    "column_name": "Rule Type",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedBy.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        504
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedBy.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser"
+                    ],
+                    "column_name": "Modified By",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Example List Description"
+                    ],
+                    "column_name": "Description",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedDate",
+                    "data_type": "string",
+                    "example_values": [
+                        "2026-03-31T11:03:15"
+                    ],
+                    "column_name": "Modified Date",
+                    "column_order": 5
+                },
+                {
+                    "data_path": "action_result.data.*.userPatterns.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "test@example.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.list_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        508
+                    ],
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.ipAddresses.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "192.0.2.1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.list_name",
+                    "data_type": "string",
+                    "example_values": [
+                        "EXAMPLE LIST NAME"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.total_entries",
+                    "data_type": "numeric",
+                    "example_values": [
+                        2
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully retrieved list"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
+            "action": "update list",
+            "description": "Update a reusable sender/recipient list in Symantec DLP",
+            "verbose": "Replaces a reusable sender/recipient pattern list using the DLP 16.0 or later REST API. The new_value parameter must be a JSON object containing the complete list definition, including name, description, ruleType, userPatterns, and ipAddresses as appropriate. Retrieve the current list first to preserve existing entries.",
+            "type": "generic",
+            "identifier": "update_list",
+            "read_only": false,
+            "parameters": {
+                "list_id": {
+                    "description": "ID of the list to update",
+                    "data_type": "numeric",
+                    "order": 0,
+                    "required": true,
+                    "primary": true,
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                "new_value": {
+                    "description": "JSON object containing the new data for the list",
+                    "data_type": "string",
+                    "order": 1,
+                    "required": true
+                }
+            },
+            "output": [
+                {
+                    "data_path": "action_result.status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success",
+                        "failed"
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.list_id",
+                    "data_type": "numeric",
+                    "contains": [
+                        "dlp list id"
+                    ],
+                    "example_values": [
+                        508
+                    ]
+                },
+                {
+                    "data_path": "action_result.parameter.new_value",
+                    "data_type": "string",
+                    "example_values": [
+                        "{\"name\": \"EXAMPLE LIST NAME\", \"description\": \"Example List Description\", \"ruleType\": 4, \"userPatterns\": [\"test@example.com\", \"example@example.com\"]}"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*",
+                    "data_type": "string"
+                },
+                {
+                    "data_path": "action_result.data.*.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        508
+                    ],
+                    "column_name": "List ID",
+                    "column_order": 0,
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "EXAMPLE LIST NAME"
+                    ],
+                    "column_name": "Name",
+                    "column_order": 1
+                },
+                {
+                    "data_path": "action_result.data.*.ruleType",
+                    "data_type": "numeric",
+                    "example_values": [
+                        4
+                    ],
+                    "column_name": "Rule Type",
+                    "column_order": 2
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedBy.id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        504
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedBy.name",
+                    "data_type": "string",
+                    "example_values": [
+                        "testuser"
+                    ],
+                    "column_name": "Modified By",
+                    "column_order": 3
+                },
+                {
+                    "data_path": "action_result.data.*.description",
+                    "data_type": "string",
+                    "example_values": [
+                        "Example List Description"
+                    ],
+                    "column_name": "Description",
+                    "column_order": 4
+                },
+                {
+                    "data_path": "action_result.data.*.modifiedDate",
+                    "data_type": "string",
+                    "example_values": [
+                        "2026-03-31T11:31:56"
+                    ],
+                    "column_name": "Modified Date",
+                    "column_order": 5
+                },
+                {
+                    "data_path": "action_result.data.*.userPatterns.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "test@example.com"
+                    ]
+                },
+                {
+                    "data_path": "action_result.data.*.ipAddresses.*",
+                    "data_type": "string",
+                    "example_values": [
+                        "192.0.2.1"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.list_id",
+                    "data_type": "numeric",
+                    "example_values": [
+                        508
+                    ],
+                    "contains": [
+                        "dlp list id"
+                    ]
+                },
+                {
+                    "data_path": "action_result.summary.update_status",
+                    "data_type": "string",
+                    "example_values": [
+                        "success"
+                    ]
+                },
+                {
+                    "data_path": "action_result.message",
+                    "data_type": "string",
+                    "example_values": [
+                        "Successfully updated list"
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                },
+                {
+                    "data_path": "summary.total_objects_successful",
+                    "data_type": "numeric",
+                    "example_values": [
+                        1
+                    ]
+                }
+            ],
+            "render": {
+                "type": "table"
+            },
+            "versions": "EQ(*)"
+        },
+        {
             "action": "on poll",
             "description": "Action handler for the ingest functionality",
             "type": "ingest",

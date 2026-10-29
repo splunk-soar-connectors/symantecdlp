@@ -45,3 +45,26 @@ default ports used by Splunk SOAR.
 |----------------------|--------------------|------|
 |         http | tcp | 80 |
 |         https | tcp | 443 |
+
+## Reusable Sender/Recipient Lists
+
+The **get list** and **update list** actions use the Sender/Recipient Pattern Management
+REST API available in Symantec DLP 16.0 and later. They use the configured device URL,
+username, password, certificate verification, and proxy settings. The configured account
+must have permission to read or modify reusable sender/recipient patterns. These actions
+call `/ProtectManager/webservices/v2/senderRecipientPattern/{list_id}` and do not use the
+incident SOAP service. Test connectivity continues to test the incident SOAP service;
+it does not validate access to this REST API.
+
+The **list_id** parameter must be a positive integer. Use **get list** to retrieve the
+current definition before updating it. The **new_value** parameter is a JSON object
+containing the complete replacement definition. Include the existing user patterns and
+IP addresses that should remain in the list; updating a list can affect policies that use it.
+
+Example **new_value**:
+
+```json
+{"name": "Example list", "description": "Sender patterns", "ruleType": 4, "userPatterns": ["test@example.com"], "ipAddresses": ["192.0.2.1"]}
+```
+
+See the [Broadcom sender/recipient pattern API examples](https://knowledge.broadcom.com/external/article/250998/symantec-dlp-core-api-reusable-senderre.html).

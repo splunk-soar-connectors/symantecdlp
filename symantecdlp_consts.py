@@ -46,3 +46,7 @@ DLP_ERROR_CODE_MESSAGE = "Error code unavailable"
 DLP_UNKNOWN_SEVERITY = "Unknown severity found. Severity {key} is not defined in custom severity. Hence, we are setting it as medium."
 
 DLP_SEVERITY_DICT = {"low": "low", "medium": "medium", "high": "high"}
+
+DLP_JSON_LIST_ID = "list_id"
+DLP_JSON_NEW_VALUE = "new_value"
+DLP_LIST_ENDPOINT = "/ProtectManager/webservices/v2/senderRecipientPattern"
